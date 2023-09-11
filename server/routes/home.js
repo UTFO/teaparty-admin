@@ -6,23 +6,8 @@ const dbo = require("../db/conn");
 const ObjectId = require("mongodb").ObjectId;
 
 // This section will help you get a list of all the records.
-router.get("/", async function (req, res) {
-  const header = req.headers["authorization"]
-  if (!header) {
-    res.sendStatus(403)
-    console.log("no auth")
-    return;
-  }
-  const token = header.split(" ")[1]
-  
+router.get("/", function (req, res) {
   let db_connect = dbo.getDb();
-  const tokenResults = await db_connect.collection("passcode").find({token: token}).toArray()
-  if (tokenResults.length != 1) {
-    res.sendStatus(403)
-    console.log("invalid token")
-    return;
-  }
-
   db_connect
     .collection("home")
     .find({})

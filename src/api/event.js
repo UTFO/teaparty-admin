@@ -1,10 +1,6 @@
 import { API_ENDPOINT } from ".";
 export const getEvent = async () => {
-  const response = await fetch(`${API_ENDPOINT}/event`, {
-    headers: {
-      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
-    }
-  });
+  const response = await fetch(`${API_ENDPOINT}/event`);
   const data = await response.json();
   return data;
 };
