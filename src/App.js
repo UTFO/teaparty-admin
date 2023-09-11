@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React from "react";
-import ReactDOM from "react-dom";
 import { TeamDataProvider } from "./page-components/team/teamContext.js";
 import "./App.css";
 
@@ -10,8 +9,6 @@ import {
   Team,
   Events,
   FAQ,
-  Navbar,
-  Footer,
   AdminAbout,
   AdminEvents,
   AdminFaq,
@@ -20,6 +17,7 @@ import {
   AdminLogin,
   AdminDashboard,
   AdminDoc,
+  MissingPage
 } from "./page-components/imports.js";
 
 function App() {
@@ -44,7 +42,9 @@ function App() {
         <Route path="/admin/pages/team" element={<AdminTeam />} />
         <Route path="/admin/pages/about" element={<AdminAbout />} />
         <Route path="/admin/doc" element={<AdminDoc />} />
+        <Route path="/*" element={<MissingPage/>}/>
       </Routes>
+      
     </BrowserRouter>
   );
 }

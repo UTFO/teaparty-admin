@@ -337,7 +337,7 @@ const AdminHome = () => {
             <div
               style={{
                 paddingLeft: 20,
-                height: "60vh",
+                minHeight: "60vh",
                 width: "90%",
                 display: "flex",
                 flexDirection: "column",
