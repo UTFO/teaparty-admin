@@ -30,7 +30,7 @@ export const updateFaq = async (id, question, answer) => {
     },
     body: JSON.stringify({
       question: question,
-      answer: answer,
+      answer: answer
     }),
   });
   const data = await response.json();

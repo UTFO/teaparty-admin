@@ -150,7 +150,7 @@ const AdminHome = () => {
     setEvents((prev) => {
       const updatedEvents = [...prev];
       updatedEvents.splice(index, 1);
-      return updatedEvents
+      return updatedEvents;
     })
   }
 

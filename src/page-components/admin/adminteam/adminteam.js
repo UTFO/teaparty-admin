@@ -11,7 +11,7 @@ import NewModal from "../components/modal/addingModal";
 import { uploadFile } from "../../../api/images";
 
 const AdminTeam = () => {
-  const [Teams, setTeams] = useState([]);
+  const [Teams, setTeams] = useState([{}]);
 
   const preloadTeam = () => {
     getTeam().then((data) => {
@@ -340,5 +340,7 @@ var dummyTeam = [
     text: "Test",
   }
 ]
+
+
 
 export default AdminTeam;

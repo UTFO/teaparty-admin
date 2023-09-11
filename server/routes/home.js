@@ -42,7 +42,7 @@ router.post("/", function (req, response) {
 //update a record
 router.put("/:id", function (req, response) {
   let db_connect = dbo.getDb();
-  let myquery = { _id: ObjectId(req.params.id) };
+  let myquery = { _id: new ObjectId(req.params.id) };
   let newvalues = {
     $set: {
       header: req.body.header,

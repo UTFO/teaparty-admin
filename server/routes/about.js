@@ -39,7 +39,7 @@ router.post("/", function (req, response) {
 //update a new record
 router.put("/:id", function (req, response) {
   let db_connect = dbo.getDb();
-  let myquery = { _id: ObjectId(req.params.id) };
+  let myquery = { _id: new ObjectId(req.params.id) };
   let newvalues = {
     $set: {
       name: req.body.name,
@@ -62,7 +62,7 @@ router.put("/:id", function (req, response) {
 //delete a record
 router.delete("/:id", (req, response) => {
   let db_connect = dbo.getDb();
-  let myquery = { _id: ObjectId(req.params.id) };
+  let myquery = { _id: new ObjectId(req.params.id) };
   db_connect.collection("about").deleteOne(myquery, function (err, obj) {
     if (err) {
       res.sendStatus(400);
