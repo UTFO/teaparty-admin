@@ -22,7 +22,7 @@ router.get("/", function (req, res) {
 router.patch("/:id", async function (req, response) {
   const header = req.headers["authorization"]
   if (!header) {
-    res.sendStatus(403)
+    response.sendStatus(403)
     console.log("no auth")
     return;
   }
@@ -31,7 +31,7 @@ router.patch("/:id", async function (req, response) {
   let db_connect = dbo.getDb();
   const tokenResults = await db_connect.collection("passcode").find({token: token}).toArray()
   if (tokenResults.length != 1) {
-    res.sendStatus(403)
+    response.sendStatus(403)
     console.log("invalid token")
     return;
   }

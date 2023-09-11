@@ -22,7 +22,7 @@ router.get("/", function (req, res) {
 router.post("/", async function (req, response) {
   const header = req.headers["authorization"]
   if (!header) {
-    res.sendStatus(403)
+    response.sendStatus(403)
     console.log("no auth")
     return;
   }
@@ -31,7 +31,7 @@ router.post("/", async function (req, response) {
   let db_connect = dbo.getDb();
   const tokenResults = await db_connect.collection("passcode").find({token: token}).toArray()
   if (tokenResults.length != 1) {
-    res.sendStatus(403)
+    response.sendStatus(403)
     console.log("invalid token")
     return;
   }
@@ -55,7 +55,7 @@ router.post("/", async function (req, response) {
 router.put("/:id", async function (req, response) {
   const header = req.headers["authorization"]
   if (!header) {
-    res.sendStatus(403)
+    response.sendStatus(403)
     console.log("no auth")
     return;
   }
@@ -64,7 +64,7 @@ router.put("/:id", async function (req, response) {
   let db_connect = dbo.getDb();
   const tokenResults = await db_connect.collection("passcode").find({token: token}).toArray()
   if (tokenResults.length != 1) {
-    res.sendStatus(403)
+    response.sendStatus(403)
     console.log("invalid token")
     return;
   }
@@ -94,7 +94,7 @@ router.put("/:id", async function (req, response) {
 router.delete("/:id", async (req, response) => {
   const header = req.headers["authorization"]
   if (!header) {
-    res.sendStatus(403)
+    response.sendStatus(403)
     console.log("no auth")
     return;
   }
@@ -103,14 +103,14 @@ router.delete("/:id", async (req, response) => {
   let db_connect = dbo.getDb();
   const tokenResults = await db_connect.collection("passcode").find({token: token}).toArray()
   if (tokenResults.length != 1) {
-    res.sendStatus(403)
+    response.sendStatus(403)
     console.log("invalid token")
     return;
   }
   let myquery = { _id: ObjectId(req.params.id) };
   db_connect.collection("event").deleteOne(myquery, function (err, obj) {
     if (err) {
-      res.sendStatus(400);
+      response.sendStatus(400);
       console.log(err);
       return;
     }
