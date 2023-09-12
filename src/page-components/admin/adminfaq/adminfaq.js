@@ -34,7 +34,6 @@ const AdminFaq = () => {
   const handleFaqUpdate = (index) => {
     setEditIndex(index);
     setEditOpen(true);
-    preloadFAQ();
   };
 
 
@@ -121,8 +120,7 @@ const NewFaqModal = (props) => {
     newFaq(questionRef.current.value, answerRef.current.value)
     handleClose()
   })
-
-
+  
   return(
     <NewModal open = {props.open} setOpen = {props.setOpen}>
       <div style={{
@@ -240,9 +238,6 @@ const FaqEditModal = (props) => {
   const answerRef = useRef("");
 
   const handleSubmit = async (e) => {
-    console.log(props.id)
-    console.log(questionRef.current.value)
-    console.log(answerRef.current.value)
     e.preventDefault();
     if(questionRef.current.length === 0 || answerRef.current.length === 0){
       alert("Please enter a value for the question and answer");
