@@ -27,12 +27,7 @@ const AdminAbout = () => {
     });
   };
 
-  useEffect(() => {
-    if (sessionStorage.getItem("accessToken") !== "true") {
-      window.location.href = "/admin";
-    }
-    preloadAbout();
-  }, []);
+  
 
 
   const handleAboutUpdate = (index) => {
@@ -44,9 +39,28 @@ const AdminAbout = () => {
   const [newOpen, setNewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
 
-  const [editIndex, setEditIndex] = useState(0);
+  const [editIndex, setEditIndex] = useState(null);
 
+  const [tabText, setTabText] = useState();
+  const [descText, setDescText] = useState();
 
+  useEffect(() => {
+    if (sessionStorage.getItem("accessToken") !== "true") {
+      window.location.href = "/admin";
+    }
+    preloadAbout();
+  }, []);
+
+  useEffect( () => {
+    if (editIndex || editIndex === 0) {
+      setAbouts((prevAbouts) => {
+      const newAbouts = [...prevAbouts]
+      newAbouts[editIndex].name = tabText
+      newAbouts[editIndex].text = descText
+      return newAbouts
+    })
+    }
+  })
   return (
     <div>
       <AdminNavbar />
@@ -74,9 +88,14 @@ const AdminAbout = () => {
           </HorizontalScrollContainer>
           <AboutTabModal open={newOpen} setOpen={setNewOpen} />
           
-          <EditAboutModal open = {editOpen} setOpen = {setEditOpen} id = {Abouts[editIndex].id} 
-            tabValue = {Abouts[editIndex].name} textValue = {Abouts[editIndex].text}
-          ></EditAboutModal>
+          {editOpen && (<EditAboutModal 
+            open = {editOpen} 
+            setOpen = {setEditOpen} 
+            editIndex = {editIndex}
+            data = {Abouts}
+            setTabText={setTabText}
+            setDescText={setDescText}
+          />)}
         </SmallContainer>
       </Container>
     </div>
@@ -205,19 +224,24 @@ const EditAboutModal = (props) => {
   const tabRef = useRef(props.tabValue || '');
   const textRef = useRef(props.textValue || '');
 
-  const [tabText, setTabText] = useState(props.tabValue || '');
-  const [descText, setDescText] = useState(props.textValue || '');
-
+  const [tabText, setTabText] = useState();
+  const [descText, setDescText] = useState();
+  useEffect(() => {
+    setTabText(props.data[props.editIndex]?.name)
+    setDescText(props.data[props.editIndex]?.text)
+  }, [])
   const handleClose = () => {
     props.setOpen(false);
+    props.setTabText(tabText);
+    props.setDescText(descText)
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     updateAbout(
-      props.id,
-      tabRef.current.value,
-      textRef.current.value
+      props.data[props.editIndex].id,
+      tabRef.current.value ? tabRef.current.value : tabText,
+      textRef.current.value ? textRef.current.value : descText
     )
     handleClose();
   }
@@ -258,14 +282,16 @@ const EditAboutModal = (props) => {
         width: "100%",
         flex: 1,
         }}>
-          <textarea value = {tabText} ref={tabRef} style={{
+          <textarea ref={tabRef} value={tabText} style={{
             width: "100%",
             height: 33,
             borderRadius: 5,
             border: "solid 3pt #DEDEDE",
             paddingLeft: 5,
             fontSize: 16,
-          }} onChange={(e) => setTabText(e.target.value)}/> 
+            fontFamily: "Roboto", 
+          }}
+          onChange={(e) => {setTabText(e.target.value)}}/> 
         </div>
       </div>
       <div style={{
@@ -282,7 +308,7 @@ const EditAboutModal = (props) => {
             fontSize: 20,
             marginBottom: 8,
           }}>Text</p>
-        <textarea value={descText} ref={textRef} style={{
+        <textarea ref={textRef} value={descText} style={{
           width: "100%",
           height: "90%",
           borderRadius: 5,
@@ -292,7 +318,8 @@ const EditAboutModal = (props) => {
           resize: "none",
           fontFamily: "Roboto",
           fontSize: 16,
-        }} onChange={(e) => setDescText(e.target.value)} />
+        }} 
+        onChange={(e) => {setDescText(e.target.value)}}/>
       </div>
       <button onClick={handleSubmit} className={"admin-submit-hover"} style={{
           position: "absolute",
