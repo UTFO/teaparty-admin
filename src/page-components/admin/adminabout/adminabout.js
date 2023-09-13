@@ -3,11 +3,12 @@ import "./adminabout.css";
 import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
-import { getAbout, newAbout, updateAbout } from "../../../api/about";
+import { deleteAbout, getAbout, newAbout, updateAbout } from "../../../api/about";
 
 import HorizontalScrollContainer from "../components/scrollContainer/horizontalScrollContainer";
 import AboutListContainer from "../components/scrollContainer/aboutListContainer";
 import NewModal from "../components/modal/addingModal";
+import DeletePrompt from "../components/modal/deletePrompt";
 
 const AdminAbout = () => {
   const [Abouts, setAbouts] = useState([{}]);
@@ -27,9 +28,6 @@ const AdminAbout = () => {
     });
   };
 
-  
-
-
   const handleAboutUpdate = (index) => {
     setEditIndex(index);
     setEditOpen(true);
@@ -38,11 +36,22 @@ const AdminAbout = () => {
   // controlling the opening and closing of the modal for adding new about tabs
   const [newOpen, setNewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const [editIndex, setEditIndex] = useState(null);
 
   const [tabText, setTabText] = useState();
   const [descText, setDescText] = useState();
+
+  const initialDeleteHandler = (index) => {
+    setDeleteOpen(true);
+    setEditIndex(index);
+  }
+
+  const handleAboutDelete = () => {
+      deleteAbout(Abouts[editIndex].id);
+      console.log(`Deleted index ${editIndex}`);
+  }
 
   useEffect(() => {
     if (sessionStorage.getItem("accessToken") !== "true") {
@@ -81,7 +90,7 @@ const AdminAbout = () => {
                   name={about.name}
                   text={about.text}
                   editFunction={() => {handleAboutUpdate(index)}}
-                  deleteFunction={() => {}}
+                  deleteFunction={() => {initialDeleteHandler(index)}}
                 />
               );
             })}
@@ -95,6 +104,12 @@ const AdminAbout = () => {
             data = {Abouts}
             setTabText={setTabText}
             setDescText={setDescText}
+          />)}
+
+          {deleteOpen && (<DeletePrompt
+            open = {deleteOpen}
+            setOpen = {setDeleteOpen}
+            deleteFunction = {() => {handleAboutDelete()}}
           />)}
         </SmallContainer>
       </Container>
@@ -230,10 +245,11 @@ const EditAboutModal = (props) => {
     setTabText(props.data[props.editIndex]?.name)
     setDescText(props.data[props.editIndex]?.text)
   }, [])
+
   const handleClose = () => {
     props.setOpen(false);
     props.setTabText(tabText);
-    props.setDescText(descText)
+    props.setDescText(descText);
   }
 
   const handleSubmit = async (e) => {

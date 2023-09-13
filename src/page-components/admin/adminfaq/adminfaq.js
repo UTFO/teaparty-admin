@@ -53,24 +53,27 @@ const AdminFaq = () => {
     preloadFAQ();
   }, []);
 
-  const questionRef = useRef("");
-  const answerRef = useRef("");
 
   const [newOpen, setNewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
 
-  const [editIndex, setEditIndex] = useState(0);
+  const [editIndex, setEditIndex] = useState(null);
 
-  const handleClose = () => {
-    setNewOpen(false);
-  }
+  const [questionText, setQuestionText] = useState();
+  const [answerText, setAnswerText] = useState();
 
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault()
-    console.log("submitted")
-    newFaq(questionRef.current.value, answerRef.current.value)
-    handleClose()
-  })
+  useEffect( () => {
+    if (editIndex || editIndex === 0) {
+      setFAQs((prevFAQs) => {
+      const newFaqs = [...prevFAQs];
+      newFaqs[editIndex].question = questionText;
+      newFaqs[editIndex].answer = answerText;
+      return newFaqs;
+    })
+    }
+  }, []);
+
+
 
   return (
     <div>
@@ -96,7 +99,17 @@ const AdminFaq = () => {
             })}
           </ScrollContainer>
           <NewFaqModal open = {newOpen} setOpen = {setNewOpen}></NewFaqModal>
-          <FaqEditModal open = {editOpen} setOpen = {setEditOpen} id = {FAQs[editIndex].id}></FaqEditModal>
+          {editOpen &&
+            (<FaqEditModal open = {editOpen} 
+              setOpen = {setEditOpen} 
+              data = {FAQs} 
+              editIndex = {editIndex} 
+              setQuestionText = {setQuestionText} 
+              setAnswerText = {setAnswerText}
+            />)
+
+          }
+          
           
         </SmallContainer>
       </Container>
@@ -229,13 +242,26 @@ const NewFaqModal = (props) => {
 //------------------------------------------------------------------------
 
 const FaqEditModal = (props) => {
+  
+
+  const questionRef = useRef(props.questionValue || '');
+  const answerRef = useRef(props.answerValue || '');
+
+  const [questionText, setQuestionText] = useState();
+  const [answerText, setAnswerText] = useState();
+
+  useEffect( () => {
+    setQuestionText(props.data[props.editIndex]?.question);
+    setAnswerText(props.data[props.editIndex]?.answer);
+  }, []
+  )
+
   const handleClose = () => {
     props.setOpen(false)
+    props.setQuestionText(questionText);
+    props.setAnswerText(answerText);
     console.log("closed");
   }
-
-  const questionRef = useRef("");
-  const answerRef = useRef("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -245,10 +271,10 @@ const FaqEditModal = (props) => {
     }
     console.log("submitting");
     updateFaq(
-      props.id,
-      questionRef.current.value,
-      answerRef.current.value
-    )
+      props.data[props.editIndex]?.id,
+      questionRef.current.value ? questionRef.current.value : questionText,
+      answerRef.current.value ? answerRef.current.value : answerText
+    ) 
     
     handleClose();
   };
@@ -289,14 +315,14 @@ const FaqEditModal = (props) => {
                 width: "100%",
                 flex: 1,
                 }}>
-                  <textarea placeholder="Enter the question here" ref={questionRef} style={{
+                  <textarea value={questionText} ref={questionRef} style={{
                     width: "100%",
                     height: 33,
                     borderRadius: 5,
                     border: "solid 3pt #DEDEDE",
                     paddingLeft: 5,
                     fontSize: 16,
-                  }} /> 
+                  }} onChange={(e) => setQuestionText(e.target.value)} /> 
                 </div>
               </div>
               <div style={{
@@ -313,7 +339,7 @@ const FaqEditModal = (props) => {
                     fontSize: 20,
                     marginBottom: 8,
                   }}>Answer</p>
-                <textarea placeholder="Enter the answer here"  ref={answerRef} style={{
+                <textarea value={answerText}  ref={answerRef} style={{
                   width: "100%",
                   height: "90%",
                   borderRadius: 5,
@@ -323,7 +349,7 @@ const FaqEditModal = (props) => {
                   resize: "none",
                   fontFamily: "Roboto",
                   fontSize: 16,
-                }} />
+                }} onChange={(e) => setAnswerText(e.target.value)}/>
               </div>
               <button onClick={handleSubmit} className={"admin-submit-hover"} style={{
                   position: "absolute",
