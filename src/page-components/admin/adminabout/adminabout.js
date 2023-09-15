@@ -3,7 +3,7 @@ import "./adminabout.css";
 import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
-import { getAbout, newAbout } from "../../../api/about";
+import { getAbout, newAbout, updateAbout } from "../../../api/about";
 
 import HorizontalScrollContainer from "../components/scrollContainer/horizontalScrollContainer";
 import AboutListContainer from "../components/scrollContainer/aboutListContainer";
@@ -11,6 +11,9 @@ import NewModal from "../components/modal/addingModal";
 
 const AdminAbout = () => {
   const [Abouts, setAbouts] = useState([]);
+  const [ModalData, setModalData] = useState({
+    edit: false,
+  })
 
   const preloadAbout = () => {
     getAbout().then((data) => {
@@ -19,13 +22,20 @@ const AdminAbout = () => {
         // Convert the binary data to a Base64-encoded string
         tempAbouts = [
           ...tempAbouts,
-          { name: info.name, text: info.text },
+          { _id: info._id, name: info.name, text: info.text },
         ];
       });
 
       setAbouts(tempAbouts);
     });
   };
+
+  const editAbout = (index) => {
+    setModalData({
+      edit: true,
+      data: Abouts[index]})
+    setOpenModal(true)
+  }
 
   useEffect(() => {
     if (sessionStorage.getItem("accessToken") !== "true") {
@@ -47,21 +57,26 @@ const AdminAbout = () => {
           width={95}
         >
           <HorizontalScrollContainer
-            handleOpen={() => setOpenModal(true)}
+            handleOpen={() => {
+              setOpenModal(true)
+              setModalData({
+                edit: false,
+              })
+            }}
           >
             {/* Insert list of event highlights here as a ListContainer */}
-            {Abouts.map((about) => {
+            {Abouts.map((about, index) => {
               return (
                 <AboutListContainer
                   name={about.name}
                   text={about.text}
-                  editFunction={() => {}}
+                  editFunction={() => editAbout(index)}
                   deleteFunction={() => {}}
                 />
               );
             })}
           </HorizontalScrollContainer>
-          <AboutTabModal open={openModal} setOpen={setOpenModal} />
+          {openModal && <AboutTabModal open={openModal} setOpen={setOpenModal} data={ModalData}/>}
         </SmallContainer>
       </Container>
     </div>
@@ -73,15 +88,34 @@ const AboutTabModal = (props) => {
   const handleClose = () => {
     props.setOpen(false);
   }
+  const [newData, setNewData] = useState({
+    name: "",
+    text: "",
+  })
 
+  const data = props.data
+
+  useEffect(() => {
+    if (data.edit) {
+      setNewData({
+        name: data.data.name,
+        text: data.data.text,
+      })
+
+    }
+    console.log(data)
+  }, [])
+  
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
     console.log("submitted")
-    newAbout(tabRef.current.value, textRef.current.value)
+    if (data.edit)
+      updateAbout(data.data._id, newData.name, newData.text)
+    else
+      newAbout(newData.name, newData.text)
     handleClose()
     })
-  const tabRef = useRef("")
-  const textRef = useRef("")
+
   return (<NewModal open={props.open} setOpen={props.setOpen}>
     <div style={{
       position: "absolute",
@@ -117,14 +151,20 @@ const AboutTabModal = (props) => {
         width: "100%",
         flex: 1,
         }}>
-          <input type="text" ref={tabRef} style={{
+          <input type="text" value={newData.name} style={{
             width: "100%",
             height: 33,
             borderRadius: 5,
             border: "solid 3pt #DEDEDE",
             paddingLeft: 5,
             fontSize: 16,
-          }} /> 
+          }}
+            onChange={(event) => { setNewData((newData) => {
+              return {
+              name: event.target.value,
+              text: newData.text,
+            }})
+            }} /> 
         </div>
       </div>
       <div style={{
@@ -141,7 +181,7 @@ const AboutTabModal = (props) => {
             fontSize: 20,
             marginBottom: 8,
           }}>Text</p>
-        <textarea  ref={textRef} style={{
+        <textarea  value={newData.text} style={{
           width: "100%",
           height: "90%",
           borderRadius: 5,
@@ -151,7 +191,13 @@ const AboutTabModal = (props) => {
           resize: "none",
           fontFamily: "Roboto",
           fontSize: 16,
-        }} />
+        }}
+          onChange={(event) => { setNewData((newData) => {
+            return {
+            name: newData.name,
+            text: event.target.value,
+          }})
+          }} />
       </div>
       <button onClick={handleSubmit} className={"admin-submit-hover"} style={{
           position: "absolute",
