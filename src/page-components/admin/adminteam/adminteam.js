@@ -3,12 +3,13 @@ import "./adminteam.css";
 import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
-import { getTeam, newTeam } from "../../../api/team";
+import { deleteTeam, getTeam, newTeam } from "../../../api/team";
 
 import HorizontalScrollContainer from "../components/scrollContainer/horizontalScrollContainer";
 import TeamListContainer from "../components/scrollContainer/teamListContainer";
 import NewModal from "../components/modal/addingModal";
 import { uploadFile } from "../../../api/images";
+import DeletePrompt from "../components/modal/deletePrompt";
 
 const AdminTeam = () => {
   const [Teams, setTeams] = useState([{}]);
@@ -20,7 +21,7 @@ const AdminTeam = () => {
         // Convert the binary data to a Base64-encoded string
         tempTeams = [
           ...tempTeams,
-          { name: info.name, message: info.message, image: info.image, role: info.role, linkedin: info.linkedin, instagram: info.instagram },
+          { name: info.name, message: info.message, image: info.image, role: info.role, linkedin: info.linkedin, instagram: info.instagram, id: info._id },
         ];
       });
 
@@ -35,7 +36,25 @@ const AdminTeam = () => {
     preloadTeam();
   }, []);
 
-  const [open, setOpen] = useState(false)
+  const handleInitialDelete = (index) => {
+      setEditIndex(index);
+      setDeleteOpen(true);
+  }
+
+  const handleTeamDelete = () => {
+    deleteTeam(Teams[editIndex].id);
+    setTeams((prev) =>{
+      const updatedTeams = [...prev];
+      updatedTeams.splice(editIndex, 1);
+      return updatedTeams;
+    });
+  }
+
+  const [newOpen, setNewOpen] = useState(false);
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const [editIndex, setEditIndex] = useState(null);
 
   return (
     <div>
@@ -47,21 +66,26 @@ const AdminTeam = () => {
           subtitle="Click on the pencil icon to edit, plus icon to add, and trash icon to delete"
           width={95}
         >
-          <HorizontalScrollContainer handleOpen={() => {setOpen(true)}}>
+          <HorizontalScrollContainer handleOpen={() => {setNewOpen(true)}}>
             {/* Insert list of event highlights here as a ListContainer */}
-            {Teams.map((team) => {
+            {Teams.map((team, index) => {
               return (
                 <TeamListContainer
                   image = {team.image}
                   name = {team.name}
                   text={team.message}
                   editFunction={() => {}}
-                  deleteFunction={() => {}}
+                  deleteFunction={() => {handleInitialDelete(index)}}
                 />
               );
             })}
           </HorizontalScrollContainer>
-          <NewTeamModal open={open} setOpen={setOpen} />
+          <NewTeamModal open={newOpen} setOpen={setNewOpen} />
+          {deleteOpen && (<DeletePrompt
+            open = {deleteOpen}
+            setOpen = {setDeleteOpen}
+            deleteFunction = {() => {handleTeamDelete()}}
+          />)}
         </SmallContainer>
       </Container>
     </div>
@@ -325,22 +349,6 @@ const NewTeamModal = (props) => {
     </NewModal>
   )
 }
-var dummyTeam = [
-  {
-    image: "",
-    name: "Test",
-    text: "Test",
-  },{
-    image: "",
-    name: "Test",
-    text: "Test",
-  },{
-    image: "",
-    name: "Test",
-    text: "Test",
-  }
-]
-
 
 
 export default AdminTeam;

@@ -7,6 +7,11 @@ const DeletePrompt = (props) => {
     const handleClose = () => {
         props.setOpen(false);
     }
+
+    const executeDelete = () => {
+        props.deleteFunction();
+        handleClose();
+    }
     return(
         <NewModal open = {props.open} setOpen = {props.setOpen}>
             <div className="delete-prompt">
@@ -19,8 +24,8 @@ const DeletePrompt = (props) => {
                     </div>
                 </div>
                 <div className="buttons">
-                    <button className="no-button" onClick={handleClose}>No</button>
-                    <button className="yes-button" onClick={props.deleteFunction}>Yes</button>
+                    <button className="no-button" onClick={handleClose}>Cancel</button>
+                    <button className="yes-button" onClick={executeDelete}>Proceed</button>
                 </div>
                 
                 

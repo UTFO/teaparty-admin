@@ -16,6 +16,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { getLinks, updateLinks } from "../../../api/links";
 import { getHome, newHome, deleteHome } from "../../../api/home";
 import NewModal from "../components/modal/addingModal";
+import DeletePrompt from "../components/modal/deletePrompt";
 
 function InputField(props) {
   return (
@@ -57,7 +58,9 @@ const AdminHome = () => {
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null)
   //determines if the modal is open or not
-  const [open, setOpen] = useState(false)
+  const [newOpen, setNewOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
   // Function to save input values
   const submitForm = async () => {
     console.log(form);
@@ -127,8 +130,13 @@ const AdminHome = () => {
 
   const handleClose = () => {
     setFile(null)
-    setOpen(false)
+    setNewOpen(false)
     console.log("closed")
+  }
+
+  const handleInitialDelete = (index) => {
+    setEditIndex(index);
+    setDeleteOpen(true);
   }
 
   const handleSubmit = useCallback(async (e) => {
@@ -144,12 +152,11 @@ const AdminHome = () => {
     handleClose()
     })
 
-  const removeEvent = (index) => {
-    deleteHome(events[index].id)
-    console.log(index)
+  const removeEvent = () => {
+    deleteHome(events[editIndex].id)
     setEvents((prev) => {
       const updatedEvents = [...prev];
-      updatedEvents.splice(index, 1);
+      updatedEvents.splice(editIndex, 1);
       return updatedEvents;
     })
   }
@@ -175,7 +182,7 @@ const AdminHome = () => {
             subtitle="Click on the pencil icon to edit, plus icon to add, and trash icon to delete"
             width={50}
           >
-            <ScrollContainer handleOpen={() => {setOpen(true)}}>
+            <ScrollContainer handleOpen={() => {setNewOpen(true)}}>
               {/* Insert list of event highlights here as a ListContainer */}
               {events.map((event, index) => {
                 return (
@@ -183,14 +190,14 @@ const AdminHome = () => {
                     image={event.image}
                     title={event.header}
                     editFunction={() => {}}
-                    deleteFunction={() => {removeEvent(index)}}
+                    deleteFunction={() => {handleInitialDelete(index)}}
                   />
                 );
               })}
             </ScrollContainer>
           </SmallContainer>
           <form onSubmit={handleSubmit}>
-          <NewModal open={open} setOpen={setOpen} >
+          <NewModal open={newOpen} setOpen={setNewOpen} >
               <div
                 style={{
                   position: "absolute",
@@ -328,6 +335,11 @@ const AdminHome = () => {
                 </button>
               </div> 
           </NewModal>
+          {deleteOpen && (<DeletePrompt
+            open = {deleteOpen}
+            setOpen = {setDeleteOpen}
+            deleteFunction = {() => {removeEvent()}}
+          />)}
           </form>
           <SmallContainer
             title="Edit Links"

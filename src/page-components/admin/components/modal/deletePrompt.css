@@ -1,0 +1,66 @@
+.delete-prompt{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 40px;
+    width: 45vw;
+    height: 15vw;
+    text-align: center;
+}
+
+.warning{
+    margin-bottom: 30px;
+}
+
+.warning-header{
+    text-decoration: red;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+    padding-top: 10px;
+    height: 35%;
+}
+
+.warning-description{
+    font-size: 20px;
+    margin-top: 15px;
+    color: black;
+    height: 20%;
+}
+
+.buttons{
+    display: flex;
+    flex-direction: row;
+    width: 70%;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+
+.no-button{
+    background-color: #85ffb6;
+    flex: 1;
+    align-self: flex-start;
+    cursor: pointer;
+    border: 2px solid black;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+    padding: 10px 20px;
+}
+
+
+
+.yes-button{
+    background-color: #85ffb6;
+    flex: 1;
+    align-self: flex-end;
+    cursor: pointer;
+    border: 2px solid black;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+    padding: 10px 20px;
+}
+

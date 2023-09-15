@@ -4,7 +4,7 @@ import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { getEvent, newEvent } from "../../../api/event";
+import { deleteEvent, getEvent, newEvent } from "../../../api/event";
 
 import {
   ScrollContainer,
@@ -13,10 +13,11 @@ import {
 
 import NewModal from "../components/modal/addingModal";
 import { SettingsPowerRounded } from "@mui/icons-material";
+import DeletePrompt from "../components/modal/deletePrompt";
 
 
 const AdminEvents = () => {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([{}]);
 
   // Function to preload event highlights
   const preloadEvents = () => {
@@ -31,6 +32,7 @@ const AdminEvents = () => {
             address: info.address,
             date: info.date,
             type: info.type,
+            id: info._id
           },
         ];
       });
@@ -46,10 +48,26 @@ const AdminEvents = () => {
     preloadEvents();
   }, []);
 
-  const [open, setOpen] = useState(false)
+  const [newOpen, setNewOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
+  const [editIndex, setEditIndex] = useState(null);
+
+  const handleInitialDelete = (index) => {
+    setEditIndex(index);
+    setDeleteOpen(true);
+  }
+
+  const handleEventDelete = () => {
+    deleteEvent(events[editIndex].id);
+    setEvents((prev) => {
+      const updatedEvents = [...prev];
+      updatedEvents.splice(editIndex, 1);
+      return updatedEvents;
+    })
+  }
   const handleClose = () => {
-    setOpen(false)
+    setNewOpen(false);
   }
 
   const eventTitleRef = useRef("")
@@ -82,9 +100,9 @@ const AdminEvents = () => {
             subtitle="Click on the pencil icon to edit, plus icon to add, and trash icon to delete"
             width={45}
           >
-            <ScrollContainer handleOpen={() => {setOpen(true)}}>
+            <ScrollContainer handleOpen={() => {setNewOpen(true)}}>
               {/* Insert list of event highlights here as a ListContainer */}
-              {events.map((event) => {
+              {events.map((event, index) => {
                 return (
                   <ListContainer
                     name={event.title}
@@ -92,12 +110,12 @@ const AdminEvents = () => {
                     // address={event.address}
                     time=""
                     editFunction={() => {}}
-                    deleteFunction={() => {}}
+                    deleteFunction={() => {handleInitialDelete(index)}}
                   />
                 );
               })}
             </ScrollContainer>
-            <NewModal open={open} setOpen={setOpen} >
+            <NewModal open={newOpen} setOpen={setNewOpen} >
               <div
                 style={{
                   position: "absolute",
@@ -272,6 +290,11 @@ const AdminEvents = () => {
                 </button>
               </div>
             </NewModal>
+            {deleteOpen && (<DeletePrompt
+            open = {deleteOpen}
+            setOpen = {setDeleteOpen}
+            deleteFunction = {() => {handleEventDelete()}}
+          />)}
           </SmallContainer>
           <SmallContainer
             title="Check Past Events"

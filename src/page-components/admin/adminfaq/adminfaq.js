@@ -11,6 +11,7 @@ import {
   ListContainer,
 } from "../components/scrollContainer/scrollContainer.js";
 import NewModal from "../components/modal/addingModal";
+import DeletePrompt from "../components/modal/deletePrompt";
 
 const AdminFaq = () => {
   const [FAQs, setFAQs] = useState([{}]);
@@ -36,12 +37,16 @@ const AdminFaq = () => {
     setEditOpen(true);
   };
 
+  const initialDeleteHandler = (index) => {
+    setEditIndex(index);
+    setDeleteOpen(true);
+  }
 
-  const handleFaqDelete = (index) => {
-    deleteFaq(FAQs[index].id);
+  const handleFaqDelete = () => {
+    deleteFaq(FAQs[editIndex].id);
     setFAQs((prev) => {
       const updatedFAQs = [...prev];
-      updatedFAQs.splice(index, 1);
+      updatedFAQs.splice(editIndex, 1);
       return updatedFAQs;
     })
   }
@@ -56,6 +61,7 @@ const AdminFaq = () => {
 
   const [newOpen, setNewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const [editIndex, setEditIndex] = useState(null);
 
@@ -72,8 +78,6 @@ const AdminFaq = () => {
     })
     }
   }, []);
-
-
 
   return (
     <div>
@@ -93,7 +97,7 @@ const AdminFaq = () => {
                   title={faq.question}
                   answer={faq.answer}
                   editFunction={() => {handleFaqUpdate(index)}}
-                  deleteFunction={() => {handleFaqDelete(index)}}
+                  deleteFunction={() => {initialDeleteHandler(index)}}
                 />
               );
             })}
@@ -109,6 +113,12 @@ const AdminFaq = () => {
             />)
 
           }
+
+            {deleteOpen && (<DeletePrompt
+            open = {deleteOpen}
+            setOpen = {setDeleteOpen}
+            deleteFunction = {() => {handleFaqDelete()}}
+          />)}
           
           
         </SmallContainer>

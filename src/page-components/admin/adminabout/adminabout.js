@@ -50,7 +50,11 @@ const AdminAbout = () => {
 
   const handleAboutDelete = () => {
       deleteAbout(Abouts[editIndex].id);
-      console.log(`Deleted index ${editIndex}`);
+      setAbouts((prevAbouts) => {
+        const updatedAbouts = [...prevAbouts];
+        updatedAbouts.splice(editIndex, 1);
+        return updatedAbouts;
+      });
   }
 
   useEffect(() => {
@@ -63,13 +67,13 @@ const AdminAbout = () => {
   useEffect( () => {
     if (editIndex || editIndex === 0) {
       setAbouts((prevAbouts) => {
-      const newAbouts = [...prevAbouts]
-      newAbouts[editIndex].name = tabText
-      newAbouts[editIndex].text = descText
-      return newAbouts
-    })
+      const newAbouts = [...prevAbouts];
+      newAbouts[editIndex].name = tabText;
+      newAbouts[editIndex].text = descText;
+      return newAbouts;
+    });
     }
-  })
+  }, [])
   return (
     <div>
       <AdminNavbar />
