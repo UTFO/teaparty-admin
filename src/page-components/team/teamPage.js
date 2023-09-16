@@ -141,26 +141,13 @@ function TeamCard(props) {
           className="page-team-card-socials"
         >
           {instagramExist ? (
-            <div style={{ "--i": 0 }}>
+            <div style={{ "--i": -rotation }}>
               <a
                 style={{ "pointer-events": props.current ? "initial" : "none" }}
                 href={props.member.instagram}
                 target="_blank"
               >
                 <img src={Instagram_Icon} />
-              </a>
-            </div>
-          ) : (
-            <></>
-          )}
-          {twitterExist ? (
-            <div style={{ "--i": -rotation }}>
-              <a
-                style={{ "pointer-events": props.current ? "initial" : "none" }}
-                href={props.member.twitter}
-                target="_blank"
-              >
-                <img src={Twitter_Icon} />
               </a>
             </div>
           ) : (
