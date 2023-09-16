@@ -1,7 +1,7 @@
 :root {
   --transitionTime: 0.5s;
   --leftTransition: 80em;
-  --rotationScale: 0;
+  --rotationScale: 15deg;
 }
 
 .page-team {
@@ -34,7 +34,7 @@
   --size: 1;
 
   white-space: nowrap;
-  --rotateAmount: calc(180deg + 15deg * var(--x));
+  --rotateAmount: calc(180deg + var(--rotationScale) * var(--x));
   transform: rotate(var(--rotateAmount));
   left: var(--leftTransition);
   transform-origin: -30em;
@@ -160,7 +160,7 @@
 .page-team-card-socials div {
   position: absolute;
   transform-origin: calc(var(--size) * -9.2vh);
-  transform: rotate(calc(360deg / 200 * var(--i)));
+  transform: rotate(calc(360deg / 300 * var(--i)));
   transition-duration: var(--transitionTime);
   transition-property: transform;
 }
@@ -168,7 +168,7 @@
 .page-team-card-socials img {
   width: calc(var(--size) * 4.2vh);
   margin: calc(var(--size) * 0.42vh) 0;
-  transform: rotate(calc(360deg / -200 * var(--i)));
+  transform: rotate(calc(360deg / -300 * var(--i)));
   transition: width 0.2s;
 }
 
@@ -190,7 +190,7 @@
   position: absolute;
   width: fit-content;
   height: fit-content;
-  --rotateAmount: calc(180deg + 15deg * var(--x));
+  --rotateAmount: calc(180deg + var(--rotationScale) * var(--x));
   transform: rotate(var(--rotateAmount));
   left: calc(var(--leftTransition) - 2em);
   transform-origin: -30em;
@@ -307,6 +307,6 @@
 
 @media all and (max-height: 900px) {
   :root {
-    --rotationScale: 5;
+    --rotationScale: 12deg;
   }
 }
