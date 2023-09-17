@@ -184,6 +184,7 @@ const AdminHome = () => {
     setOpen(true)
   }
   const removeEvent = (index) => {
+    deleteFile(events[index].image)
     deleteHome(events[index].id)
     console.log(index)
     setEvents((prev) => {
