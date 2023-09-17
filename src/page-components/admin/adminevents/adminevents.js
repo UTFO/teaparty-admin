@@ -1,10 +1,9 @@
 import React from "react";
-import "./adminevents.css";
 import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { getEvent, newEvent } from "../../../api/event";
+import { getEvent, newEvent, updateEvent } from "../../../api/event";
 
 import {
   ScrollContainer,
@@ -31,6 +30,7 @@ const AdminEvents = () => {
             address: info.address,
             date: info.date,
             type: info.type,
+            id: info._id
           },
         ];
       });
@@ -47,24 +47,41 @@ const AdminEvents = () => {
   }, []);
 
   const [open, setOpen] = useState(false)
-
+  const [editData, setEditData] = useState({edit: false})
   const handleClose = () => {
     setOpen(false)
   }
+  const [eventTitle, setEventTitle] = useState("")
+  const [eventType, setEventType] = useState("")
+  const [eventDate, setEventDate] = useState("")
+  const [eventAddress, setEventAddress] = useState("")
 
-  const eventTitleRef = useRef("")
-  const eventTypeRef = useRef("")
-  const eventDateRef =  useRef("")
-  const eventAddressRef = useRef("")
-
+  const editEvent = (index) => {
+    setEditData({
+      edit: true,
+      data: events[index]
+    })
+    setOpen(true)
+  }
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
-    
-    newEvent(eventTitleRef.current.value, eventTypeRef.current.value, eventDateRef.current.value, eventAddressRef.current.value)
+    if (editData.edit) {
+      updateEvent(editData.data.id, eventTitle, eventType, eventDate, eventAddress)
+      setEditData({edit: false})
+    }
+    else
+      newEvent(eventTitle, eventType, eventDate, eventAddress)
     console.log("submitted")
     handleClose()
     })
-
+  useEffect(() => {
+    if (editData.edit) {
+      setEventTitle(editData.data.title)
+      setEventType(editData.data.type)
+      setEventDate(editData.data.date)
+      setEventAddress(editData.data.address)
+    }
+  }, [open])
   return (
     <div>
       <AdminNavbar />
@@ -84,14 +101,14 @@ const AdminEvents = () => {
           >
             <ScrollContainer handleOpen={() => {setOpen(true)}}>
               {/* Insert list of event highlights here as a ListContainer */}
-              {events.map((event) => {
+              {events.map((event, index) => {
                 return (
                   <ListContainer
                     name={event.title}
                     date={event.date}
                     // address={event.address}
                     time=""
-                    editFunction={() => {}}
+                    editFunction={() => {editEvent(index)}}
                     deleteFunction={() => {}}
                   />
                 );
@@ -142,14 +159,16 @@ const AdminEvents = () => {
                         width: "100%",
                         flex: 1,
                       }}>
-                        <input type="text" ref={eventTitleRef} style={{
-                          width: "100%",
-                          height: 33,
-                          borderRadius: 5,
-                          border: "solid 3pt #DEDEDE",
-                          paddingLeft: 5,
-                          fontSize: 16,
-                        }} /> 
+                        <input type="text" value={eventTitle} style={{
+                            width: "100%",
+                            height: 33,
+                            borderRadius: 5,
+                            border: "solid 3pt #DEDEDE",
+                            paddingLeft: 5,
+                            fontSize: 16,
+                          }}
+                          onChange={(e) => {setEventTitle(e.target.value)}} 
+                        /> 
                       </div>
                       </div>
                         <div style={{
@@ -170,14 +189,15 @@ const AdminEvents = () => {
                           width: "100%",
                           flex: 1,
                         }}>
-                          <input type="text" ref={eventTypeRef} style={{
+                          <input type="text" value={eventType} style={{
                             width: "100%",
                             height: 33,
                             borderRadius: 5,
                             border: "solid 3pt #DEDEDE",
                             paddingLeft: 5,
                             fontSize: 16,
-                          }} /> 
+                          }}
+                          onChange={(e) => {setEventType(e.target.value)}} /> 
                         </div>
 
                       </div>
@@ -202,14 +222,15 @@ const AdminEvents = () => {
                         width: "100%",
                         flex: 1,
                       }}>
-                        <input type="text" ref={eventAddressRef} style={{
+                        <input type="text" value={eventAddress} style={{
                           width: "100%",
                           height: 33,
                           borderRadius: 5,
                           border: "solid 3pt #DEDEDE",
                           paddingLeft: 5,
                           fontSize: 16,
-                        }} /> 
+                        }}
+                        onChange={(e) => {setEventAddress(e.target.value)}} /> 
                       </div>
                     </div>
                   <div style={{
@@ -232,14 +253,15 @@ const AdminEvents = () => {
                         width: "100%",
                         flex: 1,
                       }}>
-                        <input type="text" ref={eventDateRef} style={{
+                        <input type="text" value={eventDate} style={{
                           width: "100%",
                           height: 33,
                           borderRadius: 5,
                           border: "solid 3pt #DEDEDE",
                           paddingLeft: 5,
                           fontSize: 16,
-                        }} /> 
+                        }}
+                        onChange={(e) => {setEventDate(e.target.value)}}/> 
                       </div>
                     </div>
                       <button className={"admin-submit-hover"} onClick={handleSubmit} style={{

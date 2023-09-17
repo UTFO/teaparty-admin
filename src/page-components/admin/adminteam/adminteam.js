@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import "./adminteam.css";
 import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
-import { getTeam, newTeam } from "../../../api/team";
+import { getTeam, newTeam, updateTeam } from "../../../api/team";
 
 import HorizontalScrollContainer from "../components/scrollContainer/horizontalScrollContainer";
 import TeamListContainer from "../components/scrollContainer/teamListContainer";
 import NewModal from "../components/modal/addingModal";
-import { uploadFile } from "../../../api/images";
+import { uploadFile, deleteFile } from "../../../api/images";
+
+import { fileNameToSrc } from "../../../helper";
 
 const AdminTeam = () => {
   const [Teams, setTeams] = useState([]);
-
+  const [editData, setEditData] = useState({
+    edit: false,
+  })
   const preloadTeam = () => {
     getTeam().then((data) => {
       var tempTeams = [];
@@ -20,7 +23,7 @@ const AdminTeam = () => {
         // Convert the binary data to a Base64-encoded string
         tempTeams = [
           ...tempTeams,
-          { name: info.name, message: info.message, image: info.image, role: info.role, linkedin: info.linkedin, instagram: info.instagram },
+          { id: info._id, name: info.name, message: info.message, image: info.image, role: info.role, linkedin: info.linkedin, instagram: info.instagram },
         ];
       });
 
@@ -34,9 +37,16 @@ const AdminTeam = () => {
     }
     preloadTeam();
   }, []);
-
+  const editTeam = (index) => {
+    const data= Teams[index]
+    setEditData({
+      edit: true,
+      data: data
+    })
+    setOpen(true)
+  }
   const [open, setOpen] = useState(false)
-
+  
   return (
     <div>
       <AdminNavbar />
@@ -49,19 +59,19 @@ const AdminTeam = () => {
         >
           <HorizontalScrollContainer handleOpen={() => {setOpen(true)}}>
             {/* Insert list of event highlights here as a ListContainer */}
-            {Teams.map((team) => {
+            {Teams.map((team, index) => {
               return (
                 <TeamListContainer
                   image = {team.image}
                   name = {team.name}
                   text={team.message}
-                  editFunction={() => {}}
+                  editFunction={() => {editTeam(index)}}
                   deleteFunction={() => {}}
                 />
               );
             })}
           </HorizontalScrollContainer>
-          <NewTeamModal open={open} setOpen={setOpen} />
+          {open && <NewTeamModal open={open} setOpen={setOpen} editData={editData} setEditData={setEditData}/>}
         </SmallContainer>
       </Container>
     </div>
@@ -70,6 +80,31 @@ const AdminTeam = () => {
 };
 
 const NewTeamModal = (props) => {
+  const [name, setName] = useState("")
+  const [role, setRole] = useState("")
+  const [message, setMessage] = useState("")
+  const [instagram, setInstagram] = useState("")
+  const [linkedin, setLinkedin] = useState("")
+
+  const [oldImage, setOldImage] = useState({raw: "", full: ""})
+  useEffect(() => {
+    if (props.editData.edit) {
+      
+      setOldImage({
+        raw: props.editData.data.image ?? "",
+        full: props.editData.data.image ? fileNameToSrc(props.editData.data.image) : ""
+      })
+
+      setName(props.editData.data.name)
+      setRole(props.editData.data.role)
+      setMessage(props.editData.data.message)
+      setInstagram(props.editData.data.instagram)
+      setLinkedin(props.editData.data.linkedin)
+      setImageUrl(props.editData.data.image ? fileNameToSrc(props.editData.data.image) : undefined)
+      console.log(props.editData)
+    }
+    
+  }, [])
   const handleFileChange = (e) => {
     // Uploaded file
     const file = e.target.files[0];
@@ -81,7 +116,6 @@ const NewTeamModal = (props) => {
       };
       reader.readAsDataURL(file);
   };
-
   const handleClose = () => {
     setFile(null)
     setImageUrl(null)
@@ -91,6 +125,24 @@ const NewTeamModal = (props) => {
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
+    if (props.editData.edit && oldImage.full === imageUrl) {
+      // case 1: no new image uploaded
+      updateTeam(
+        props.editData.data.id,
+        name,
+        role,
+        oldImage.raw,
+        message,
+        linkedin,
+        instagram        
+      )
+      props.setEditData({
+        edit: false,
+      })
+      handleClose()
+      return;
+    }
+    
     if (!file) {
       alert("Please upload a picture!")
       return
@@ -98,21 +150,34 @@ const NewTeamModal = (props) => {
     const fileName = await uploadFile(file)
     console.log(fileName)
     console.log("submitted")
-    newTeam(
-      memberNameRef.current.value, 
-      memberPositionRef.current.value, 
-      fileName, 
-      memberAboutRef.current.value, 
-      memberLinkedinRef.current.value, 
-      memberInstagramRef.current.value)
+
+    if (props.editData.edit) { // case 2: new image uploaded
+      updateTeam(
+        props.editData.data.id,
+        name,
+        role,
+        fileName,
+        message,
+        linkedin,
+        instagram        
+      )
+      deleteFile(oldImage.raw)
+      props.setEditData({
+        edit: false,
+      })
+    }
+    else{
+      newTeam(
+        name,
+        role,
+        fileName,
+        message,
+        linkedin,
+        instagram        
+      )
+    }    
     handleClose()
   })
-
-  const memberAboutRef = useRef("")
-  const memberNameRef = useRef("")
-  const memberPositionRef = useRef("")
-  const memberLinkedinRef = useRef("")
-  const memberInstagramRef = useRef("")
 
   const [file, setFile] = useState(null)
   const [imageUrl, setImageUrl] = useState(null)
@@ -191,14 +256,16 @@ const NewTeamModal = (props) => {
               aspectRatio: "1/1",
               marginRight: 5,
             }}/>
-            <input type="text" ref={memberLinkedinRef} style={{
-              width: "62%",
-              height: 20,
-              borderRadius: 5,
-              border: "solid 3pt #DEDEDE",
-              paddingLeft: 5,
-              fontSize: 16,
-            }} /> 
+            <input type="text" value={linkedin} style={{
+                width: "62%",
+                height: 20,
+                borderRadius: 5,
+                border: "solid 3pt #DEDEDE",
+                paddingLeft: 5,
+                fontSize: 16,
+              }}
+              onChange={(e) => {setLinkedin(e.target.value)}} 
+            /> 
 
           </div>
           <div style={{
@@ -215,14 +282,15 @@ const NewTeamModal = (props) => {
               aspectRatio: "1/1",
               marginRight: 5,
             }}/>
-            <input type="text" ref={memberInstagramRef} style={{
+            <input type="text" value={instagram} style={{
               width: "62%",
               height: 20,
               borderRadius: 5,
               border: "solid 3pt #DEDEDE",
               paddingLeft: 5,
               fontSize: 16,
-            }} /> 
+              }}
+              onChange={(e) => {setInstagram(e.target.value)}} /> 
           </div>
         </div>
         <div style={{
@@ -242,14 +310,15 @@ const NewTeamModal = (props) => {
             width: "100%",
             flex: 1,
           }}>
-            <input type="text" ref={memberNameRef} style={{
+            <input type="text" value={name} style={{
               width: "62%",
               height: 33,
               borderRadius: 5,
               border: "solid 3pt #DEDEDE",
               paddingLeft: 5,
               fontSize: 16,
-            }} /> 
+            }}
+              onChange={(e) => {setName(e.target.value)}} /> 
           </div>
           <p style={{
             fontFamily: "Oxygen, sans-serif",
@@ -261,14 +330,16 @@ const NewTeamModal = (props) => {
             width: "100%",
             flex: 1,
           }}>
-            <input type="text" ref={memberPositionRef} style={{
+            <input type="text" value={role} style={{
               width: "62%",
               height: 33,
               borderRadius: 5,
               border: "solid 3pt #DEDEDE",
               paddingLeft: 5,
               fontSize: 16,
-            }} /> 
+              }}
+              onChange={(e) => {setRole(e.target.value)}} 
+            /> 
           </div>
           <p style={{
             fontFamily: "Oxygen, sans-serif",
@@ -280,7 +351,7 @@ const NewTeamModal = (props) => {
             width: "100%",
             flex: 2,
           }}>
-            <textarea ref={memberAboutRef} style={{
+            <textarea value={message} style={{
               width: "80%",
               height: "100%",
               borderRadius: 5,
@@ -290,7 +361,9 @@ const NewTeamModal = (props) => {
               resize: "none",
               fontFamily: "Roboto",
               fontSize: 14,
-            }} />
+              }}
+              onChange={(e) => {setMessage(e.target.value)}}
+            />
           </div>
         </div>
         <button onClick={handleSubmit} className={"admin-submit-hover"} style={{
