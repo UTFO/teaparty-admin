@@ -8,7 +8,7 @@ import { getTeam, newTeam, updateTeam } from "../../../api/team";
 import HorizontalScrollContainer from "../components/scrollContainer/horizontalScrollContainer";
 import TeamListContainer from "../components/scrollContainer/teamListContainer";
 import NewModal from "../components/modal/addingModal";
-import { uploadFile } from "../../../api/images";
+import { uploadFile, deleteFile } from "../../../api/images";
 
 import { fileNameToSrc } from "../../../helper";
 
@@ -162,6 +162,7 @@ const NewTeamModal = (props) => {
         linkedin,
         instagram        
       )
+      deleteFile(oldImage.raw)
       props.setEditData({
         edit: false,
       })

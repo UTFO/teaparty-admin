@@ -5,7 +5,7 @@ import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
 
-import { uploadFile } from "../../../api/images";
+import { uploadFile, deleteFile } from "../../../api/images";
 
 import {
   ScrollContainer,
@@ -159,6 +159,7 @@ const AdminHome = () => {
     
     if (edit.edit) { // case 2: new image uploaded
       updateHome(edit.id, eventTitle, eventDescription, fileName)
+      deleteFile(edit.imageRaw)
       setEdit({
         edit: false,
       })
