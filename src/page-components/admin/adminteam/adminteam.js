@@ -10,6 +10,8 @@ import TeamListContainer from "../components/scrollContainer/teamListContainer";
 import NewModal from "../components/modal/addingModal";
 import { uploadFile } from "../../../api/images";
 
+import { fileNameToSrc } from "../../../helper";
+
 const AdminTeam = () => {
   const [Teams, setTeams] = useState([]);
   const [editData, setEditData] = useState({
@@ -58,7 +60,7 @@ const AdminTeam = () => {
         >
           <HorizontalScrollContainer handleOpen={() => {setOpen(true)}}>
             {/* Insert list of event highlights here as a ListContainer */}
-            {Teams.map((team) => {
+            {Teams.map((team, index) => {
               return (
                 <TeamListContainer
                   image = {team.image}
@@ -70,7 +72,7 @@ const AdminTeam = () => {
               );
             })}
           </HorizontalScrollContainer>
-          <NewTeamModal open={open} setOpen={setOpen} editData={editData}/>
+          {open && <NewTeamModal open={open} setOpen={setOpen} editData={editData} setEditData={setEditData}/>}
         </SmallContainer>
       </Container>
     </div>
@@ -79,21 +81,31 @@ const AdminTeam = () => {
 };
 
 const NewTeamModal = (props) => {
-  const [data, setData] = useState({})
+  const [name, setName] = useState("")
+  const [role, setRole] = useState("")
+  const [message, setMessage] = useState("")
+  const [instagram, setInstagram] = useState("")
+  const [linkedin, setLinkedin] = useState("")
+
+  const [oldImage, setOldImage] = useState({raw: "", full: ""})
   useEffect(() => {
     if (props.editData.edit) {
-      setData({
-        name: props.editData.data.name, 
-        message: props.editData.data.message,
-        image: fileNameToSrc(props.editData.data.image),
-        rawImage: props.editData.data.image,
-        role: props.editData.data.role,
-        linkedin: props.editData.data.linkedin,
-        instagram: props.editData.data.instagram
+      
+      setOldImage({
+        raw: props.editData.data.image ?? "",
+        full: props.editData.data.image ? fileNameToSrc(props.editData.data.image) : ""
       })
-      setImageUrl(fileNameToSrc(props.editData.data.image))
+
+      setName(props.editData.data.name)
+      setRole(props.editData.data.role)
+      setMessage(props.editData.data.message)
+      setInstagram(props.editData.data.instagram)
+      setLinkedin(props.editData.data.linkedin)
+      setImageUrl(props.editData.data.image ? fileNameToSrc(props.editData.data.image) : undefined)
+      console.log(props.editData)
     }
-  })
+    
+  }, [])
   const handleFileChange = (e) => {
     // Uploaded file
     const file = e.target.files[0];
@@ -114,18 +126,18 @@ const NewTeamModal = (props) => {
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
-    if (props.editData.edit && props.editData.data.image === imageUrl) {
+    if (props.editData.edit && oldImage.full === imageUrl) {
       // case 1: no new image uploaded
       updateTeam(
         props.editData.data.id,
-        data.name,
-        data.role,
-        data.rawImage,
-        data.message,
-        data.linkedin,
-        data.instagram        
+        name,
+        role,
+        oldImage.raw,
+        message,
+        linkedin,
+        instagram        
       )
-      setEdit({
+      props.setEditData({
         edit: false,
       })
       handleClose()
@@ -140,38 +152,32 @@ const NewTeamModal = (props) => {
     console.log(fileName)
     console.log("submitted")
 
-    if (edit.edit) { // case 2: new image uploaded
+    if (props.editData.edit) { // case 2: new image uploaded
       updateTeam(
         props.editData.data.id,
-        data.name,
-        data.role,
+        name,
+        role,
         fileName,
-        data.message,
-        data.linkedin,
-        data.instagram        
+        message,
+        linkedin,
+        instagram        
       )
-      setEdit({
+      props.setEditData({
         edit: false,
       })
     }
     else{
       newTeam(
-        data.name,
-        data.role,
+        name,
+        role,
         fileName,
-        data.message,
-        data.linkedin,
-        data.instagram        
+        message,
+        linkedin,
+        instagram        
       )
     }    
     handleClose()
   })
-
-  const memberAboutRef = useRef("")
-  const memberNameRef = useRef("")
-  const memberPositionRef = useRef("")
-  const memberLinkedinRef = useRef("")
-  const memberInstagramRef = useRef("")
 
   const [file, setFile] = useState(null)
   const [imageUrl, setImageUrl] = useState(null)
@@ -250,19 +256,16 @@ const NewTeamModal = (props) => {
               aspectRatio: "1/1",
               marginRight: 5,
             }}/>
-            <input type="text" value={data.linkedin} style={{
-              width: "62%",
-              height: 20,
-              borderRadius: 5,
-              border: "solid 3pt #DEDEDE",
-              paddingLeft: 5,
-              fontSize: 16,
-            }}
-              onChange={(e) => {setData((data) => {
-                const newData = data
-                newData.linkedin = e.target.value
-                return newData
-              })}} /> 
+            <input type="text" value={linkedin} style={{
+                width: "62%",
+                height: 20,
+                borderRadius: 5,
+                border: "solid 3pt #DEDEDE",
+                paddingLeft: 5,
+                fontSize: 16,
+              }}
+              onChange={(e) => {setLinkedin(e.target.value)}} 
+            /> 
 
           </div>
           <div style={{
@@ -279,21 +282,15 @@ const NewTeamModal = (props) => {
               aspectRatio: "1/1",
               marginRight: 5,
             }}/>
-            <input type="text" value={data.instagram} style={{
+            <input type="text" value={instagram} style={{
               width: "62%",
               height: 20,
               borderRadius: 5,
               border: "solid 3pt #DEDEDE",
               paddingLeft: 5,
               fontSize: 16,
-            }}
-              onChange={(e) => {
-                setData((data) => {
-                  const newData = data
-                  newData.instagram = e.target.value
-                  return newData
-                })
-              }} /> 
+              }}
+              onChange={(e) => {setInstagram(e.target.value)}} /> 
           </div>
         </div>
         <div style={{
@@ -313,7 +310,7 @@ const NewTeamModal = (props) => {
             width: "100%",
             flex: 1,
           }}>
-            <input type="text" rvalue={data.name} style={{
+            <input type="text" value={name} style={{
               width: "62%",
               height: 33,
               borderRadius: 5,
@@ -321,13 +318,7 @@ const NewTeamModal = (props) => {
               paddingLeft: 5,
               fontSize: 16,
             }}
-              onChange={(e) => {
-                setData(data => {
-                  const newData = data
-                  newData.name = e.target.value
-                  return newData
-                })
-              }} /> 
+              onChange={(e) => {setName(e.target.value)}} /> 
           </div>
           <p style={{
             fontFamily: "Oxygen, sans-serif",
@@ -339,21 +330,16 @@ const NewTeamModal = (props) => {
             width: "100%",
             flex: 1,
           }}>
-            <input type="text" value={data.role} style={{
+            <input type="text" value={role} style={{
               width: "62%",
               height: 33,
               borderRadius: 5,
               border: "solid 3pt #DEDEDE",
               paddingLeft: 5,
               fontSize: 16,
-            }}
-              onChange={(e) => {
-                setData(data => {
-                  const newData = data
-                  newData.role = e.target.value
-                  return newData
-                })
-              }} /> 
+              }}
+              onChange={(e) => {setRole(e.target.value)}} 
+            /> 
           </div>
           <p style={{
             fontFamily: "Oxygen, sans-serif",
@@ -365,7 +351,7 @@ const NewTeamModal = (props) => {
             width: "100%",
             flex: 2,
           }}>
-            <textarea value={data.description} style={{
+            <textarea value={message} style={{
               width: "80%",
               height: "100%",
               borderRadius: 5,
@@ -375,14 +361,9 @@ const NewTeamModal = (props) => {
               resize: "none",
               fontFamily: "Roboto",
               fontSize: 14,
-            }}
-              onChange={(e) => {
-                setData(data => {
-                  const newData = data
-                  newData.description = e.target.value
-                  return newData
-                })
-              }} />
+              }}
+              onChange={(e) => {setMessage(e.target.value)}}
+            />
           </div>
         </div>
         <button onClick={handleSubmit} className={"admin-submit-hover"} style={{

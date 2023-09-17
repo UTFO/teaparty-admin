@@ -68,7 +68,7 @@ router.put("/:id", async function (req, response) {
     console.log("invalid token")
     return;
   }
-  let myquery = { _id: ObjectId(req.params.id) };
+  let myquery = { _id: new ObjectId(req.params.id) };
   let newvalues = {
     $set: {
       title: req.body.title,
