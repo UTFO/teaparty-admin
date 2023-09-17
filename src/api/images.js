@@ -1,4 +1,6 @@
 import AWS from "aws-sdk";
+const {v4: uuidv4} = require("uuid");
+
 
 async function uploadFile(file) {
   // S3 Bucket Name
@@ -18,11 +20,11 @@ async function uploadFile(file) {
     region: REGION,
     credentials: creds,
   });
-
+  const newName = uuidv4()
   // Files Parameters
   const params = {
     Bucket: S3_BUCKET,
-    Key: file.name,
+    Key: newName,
     Body: file,
   };
 
@@ -42,7 +44,7 @@ async function uploadFile(file) {
   });
 
   // return `https://${S3_BUCKET}.s3.${REGION}.amazonaws.com/${file.name}`; //no longer storing entire URL
-  return file.name
+  return newName
 };
 
 const deleteFile = async (fileName) => {

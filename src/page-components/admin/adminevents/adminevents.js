@@ -1,5 +1,4 @@
 import React from "react";
-import "./adminevents.css";
 import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
