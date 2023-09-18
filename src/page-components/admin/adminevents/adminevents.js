@@ -117,7 +117,7 @@ const AdminEvents = () => {
             subtitle="Click on the pencil icon to edit, plus icon to add, and trash icon to delete"
             width={100}
           >
-            <ScrollContainer handleOpen={() => {setOpen(true)}}>
+            <ScrollContainer handleOpen={() => {setOpen(true); setEditData({edit: false})}}>
               {/* Insert list of event highlights here as a ListContainer */}
               {events.map((event, index) => {
                 return (

@@ -52,24 +52,10 @@ const AdminFaq = () => {
     preloadFAQ();
   }, []);
 
-  const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const [editIndex, setEditIndex] = useState(null);
 
-  const [questionText, setQuestionText] = useState();
-  const [answerText, setAnswerText] = useState();
-
-  useEffect( () => {
-    if (editIndex || editIndex === 0) {
-      setFAQs((prevFAQs) => {
-      const newFaqs = [...prevFAQs];
-      newFaqs[editIndex].question = questionText;
-      newFaqs[editIndex].answer = answerText;
-      return newFaqs;
-    })
-    }
-  }, []);
 
   const [editData, setEditData] = useState({edit: false})
   const editFaq = (index) => {
@@ -88,7 +74,7 @@ const AdminFaq = () => {
           subtitle="Click on the pencil icon to edit, plus icon to add, and trash icon to delete"
           width={95}
         >
-          <ScrollContainer handleOpen={() => {setOpen(true)}}> 
+          <ScrollContainer handleOpen={() => {setOpen(true); setEditData({edit: false})}}> 
             {/* Insert list of event highlights here as a ListContainer */}
             {FAQs.map((faq, index) => {
               return (

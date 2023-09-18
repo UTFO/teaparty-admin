@@ -223,7 +223,7 @@ const AdminHome = () => {
             subtitle="Click on the pencil icon to edit, plus icon to add, and trash icon to delete"
             width={50}
           >
-            <ScrollContainer handleOpen={() => {setOpen(true)}}>
+            <ScrollContainer handleOpen={() => {setOpen(true); setEdit({edit: false}); setEventTitle(""); setEventDescription(""); setImageUrl("")}}>
               {/* Insert list of event highlights here as a ListContainer */}
               {events.map((event, index) => {
                 return (
