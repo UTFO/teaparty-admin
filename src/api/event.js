@@ -10,6 +10,7 @@ export const newEvent = async (title, type, date, address) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
     },
     body: JSON.stringify({
       title: title,
@@ -27,6 +28,7 @@ export const updateEvent = async (id, title, type, date, address) => {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
     },
     body: JSON.stringify({
       title: title,
@@ -42,6 +44,9 @@ export const updateEvent = async (id, title, type, date, address) => {
 export const deleteEvent = async (id) => {
   const response = await fetch(`${API_ENDPOINT}/event/${id}`, {
     method: "DELETE",
+    headers: {
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
+    }
   });
   const data = await response.json();
   return data;

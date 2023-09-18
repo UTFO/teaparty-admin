@@ -1,4 +1,4 @@
-ul {
+.smoke-animation {
   position: absolute;
   bottom: -40px;
   z-index: 3;
@@ -12,7 +12,7 @@ ul {
   flex-wrap: wrap-reverse;
 }
 
-li {
+.smoke-animation li {
   list-style: none;
   height: 0.5vw;
   min-width: 0.3vw;

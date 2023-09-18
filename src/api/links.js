@@ -9,6 +9,7 @@ export const updateLinks = async (id, signup, email, instagram) => {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
     },
     body: JSON.stringify({
       signup: signup,

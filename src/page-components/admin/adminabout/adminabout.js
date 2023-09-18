@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import "./adminabout.css";
 import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
@@ -11,7 +10,10 @@ import NewModal from "../components/modal/addingModal";
 import DeletePrompt from "../components/modal/deletePrompt";
 
 const AdminAbout = () => {
-  const [Abouts, setAbouts] = useState([{}]);
+  const [Abouts, setAbouts] = useState([]);
+  const [ModalData, setModalData] = useState({
+    edit: false,
+  })
 
   const preloadAbout = () => {
     getAbout().then((data) => {
@@ -20,18 +22,13 @@ const AdminAbout = () => {
         // Convert the binary data to a Base64-encoded string
         tempAbouts = [
           ...tempAbouts,
-          { name: info.name, text: info.text, id: info._id },
+          { _id: info._id, name: info.name, text: info.text },
         ];
       });
 
       setAbouts(tempAbouts);
     });
   };
-
-  const handleAboutUpdate = (index) => {
-    setEditIndex(index);
-    setEditOpen(true);
-  }
 
   // controlling the opening and closing of the modal for adding new about tabs
   const [newOpen, setNewOpen] = useState(false);
@@ -55,6 +52,11 @@ const AdminAbout = () => {
         updatedAbouts.splice(editIndex, 1);
         return updatedAbouts;
       });
+  const editAbout = (index) => {
+    setModalData({
+      edit: true,
+      data: Abouts[index]})
+    setOpenModal(true)
   }
 
   useEffect(() => {
@@ -85,7 +87,12 @@ const AdminAbout = () => {
           width={95}
         >
           <HorizontalScrollContainer
-            handleOpen={() => setNewOpen(true)}
+            handleOpen={() => {
+              setOpenModal(true)
+              setModalData({
+                edit: false,
+              })
+            }}
           >
             {/* Insert list of event highlights here as a ListContainer */}
             {Abouts.map((about, index) => {
@@ -93,28 +100,19 @@ const AdminAbout = () => {
                 <AboutListContainer
                   name={about.name}
                   text={about.text}
-                  editFunction={() => {handleAboutUpdate(index)}}
                   deleteFunction={() => {initialDeleteHandler(index)}}
+                  editFunction={() => editAbout(index)}
                 />
               );
             })}
           </HorizontalScrollContainer>
-          <AboutTabModal open={newOpen} setOpen={setNewOpen} />
-          
-          {editOpen && (<EditAboutModal 
-            open = {editOpen} 
-            setOpen = {setEditOpen} 
-            editIndex = {editIndex}
-            data = {Abouts}
-            setTabText={setTabText}
-            setDescText={setDescText}
-          />)}
 
           {deleteOpen && (<DeletePrompt
             open = {deleteOpen}
             setOpen = {setDeleteOpen}
             deleteFunction = {() => {handleAboutDelete()}}
           />)}
+          {openModal && <AboutTabModal open={openModal} setOpen={setOpenModal} data={ModalData}/>}
         </SmallContainer>
       </Container>
     </div>
@@ -126,15 +124,34 @@ const AboutTabModal = (props) => {
   const handleClose = () => {
     props.setOpen(false);
   }
+  const [newData, setNewData] = useState({
+    name: "",
+    text: "",
+  })
 
+  const data = props.data
+
+  useEffect(() => {
+    if (data.edit) {
+      setNewData({
+        name: data.data.name,
+        text: data.data.text,
+      })
+
+    }
+    console.log(data)
+  }, [])
+  
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
     console.log("submitted")
-    newAbout(tabRef.current.value, textRef.current.value)
+    if (data.edit)
+      updateAbout(data.data._id, newData.name, newData.text)
+    else
+      newAbout(newData.name, newData.text)
     handleClose()
     })
-  const tabRef = useRef("")
-  const textRef = useRef("")
+
   return (<NewModal open={props.open} setOpen={props.setOpen}>
     <div style={{
       position: "absolute",
@@ -170,14 +187,20 @@ const AboutTabModal = (props) => {
         width: "100%",
         flex: 1,
         }}>
-          <textarea placeholder="Title" ref={tabRef} style={{
+          <input type="text" value={newData.name} style={{
             width: "100%",
             height: 33,
             borderRadius: 5,
             border: "solid 3pt #DEDEDE",
             paddingLeft: 5,
             fontSize: 16,
-          }} /> 
+          }}
+            onChange={(event) => { setNewData((newData) => {
+              return {
+              name: event.target.value,
+              text: newData.text,
+            }})
+            }} /> 
         </div>
       </div>
       <div style={{
@@ -194,7 +217,7 @@ const AboutTabModal = (props) => {
             fontSize: 20,
             marginBottom: 8,
           }}>Text</p>
-        <textarea placeholder="Description" ref={textRef} style={{
+        <textarea  value={newData.text} style={{
           width: "100%",
           height: "90%",
           borderRadius: 5,
@@ -204,7 +227,13 @@ const AboutTabModal = (props) => {
           resize: "none",
           fontFamily: "Roboto",
           fontSize: 16,
-        }} />
+        }}
+          onChange={(event) => { setNewData((newData) => {
+            return {
+            name: newData.name,
+            text: event.target.value,
+          }})
+          }} />
       </div>
       <button onClick={handleSubmit} className={"admin-submit-hover"} style={{
           position: "absolute",

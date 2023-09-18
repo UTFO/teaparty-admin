@@ -12,6 +12,7 @@ export const newFaq = async (question, answer) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
     },
     body: JSON.stringify({
       question: question,
@@ -27,6 +28,7 @@ export const updateFaq = async (id, question, answer) => {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
     },
     body: JSON.stringify({
       question: question,
@@ -40,6 +42,9 @@ export const updateFaq = async (id, question, answer) => {
 export const deleteFaq = async (id) => {
   const response = await fetch(`${API_ENDPOINT}/faq/${id}`, {
     method: "DELETE",
+    headers: {
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
+    }
   });
   const data = await response.json();
   return data;

@@ -5,7 +5,7 @@ import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
 
-import { uploadFile } from "../../../api/images";
+import { uploadFile, deleteFile } from "../../../api/images";
 
 import {
   ScrollContainer,
@@ -14,9 +14,11 @@ import {
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { getLinks, updateLinks } from "../../../api/links";
-import { getHome, newHome, deleteHome } from "../../../api/home";
+import { getHome, newHome, deleteHome, updateHome } from "../../../api/home";
 import NewModal from "../components/modal/addingModal";
 import DeletePrompt from "../components/modal/deletePrompt";
+
+import { fileNameToSrc } from "../../../helper";
 
 function InputField(props) {
   return (
@@ -61,6 +63,11 @@ const AdminHome = () => {
   const [newOpen, setNewOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
+  const [open, setOpen] = useState(false)
+
+  const [edit, setEdit] = useState({
+    edit: false,
+  })
   // Function to save input values
   const submitForm = async () => {
     console.log(form);
@@ -124,9 +131,9 @@ const AdminHome = () => {
     preloadEvents();
     setImageUrl(null)
   }, []);
+  const [eventTitle, setEventTitle] = useState("")
+  const [eventDescription, setEventDescription] = useState("")
 
-  const eventTitleRef = useRef("")
-  const eventDescriptionRef = useRef("")
 
   const handleClose = () => {
     setFile(null)
@@ -141,6 +148,16 @@ const AdminHome = () => {
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
+    if (edit.edit && edit.image === imageUrl) {
+      // case 1: no new image uploaded
+      updateHome(edit.id, eventTitle, eventDescription, edit.imageRaw)
+      setEdit({
+        edit: false,
+      })
+      handleClose()
+      return;
+    }
+    
     if (!file) {
       alert("Please upload a picture!")
       return
@@ -148,12 +165,37 @@ const AdminHome = () => {
     const fileName = await uploadFile(file)
     console.log(fileName)
     console.log("submitted")
-    newHome(eventTitleRef.current.value, eventDescriptionRef.current.value, fileName)
+    
+    if (edit.edit) { // case 2: new image uploaded
+      updateHome(edit.id, eventTitle, eventDescription, fileName)
+      deleteFile(edit.imageRaw)
+      setEdit({
+        edit: false,
+      })
+    }
+    else{
+      newHome(eventTitle, eventDescription, fileName)
+    }    
     handleClose()
     })
 
-  const removeEvent = () => {
-    deleteHome(events[editIndex].id)
+  const editEvent = (index) => {
+    const data = events[index]
+    setEventTitle(data.header)
+    setEventDescription(data.text)
+    setImageUrl(fileNameToSrc(data.image))
+    setEdit({
+      edit: true,
+      id: data.id,
+      image: fileNameToSrc(data.image),
+      imageRaw: data.image
+    })
+    setOpen(true)
+  }
+  const removeEvent = (index) => {
+    deleteFile(events[index].image)
+    deleteHome(events[index].id)
+    console.log(index)
     setEvents((prev) => {
       const updatedEvents = [...prev];
       updatedEvents.splice(editIndex, 1);
@@ -189,15 +231,15 @@ const AdminHome = () => {
                   <ListContainer
                     image={event.image}
                     title={event.header}
-                    editFunction={() => {}}
                     deleteFunction={() => {handleInitialDelete(index)}}
+                    editFunction={() => {editEvent(index)}}
                   />
                 );
               })}
             </ScrollContainer>
           </SmallContainer>
           <form onSubmit={handleSubmit}>
-          <NewModal open={newOpen} setOpen={setNewOpen} >
+          {open && <NewModal open={open} setOpen={setOpen} >
               <div
                 style={{
                   position: "absolute",
@@ -274,14 +316,15 @@ const AdminHome = () => {
                     width: "100%",
                     flex: 1,
                   }}>
-                    <input type="text" ref={eventTitleRef} style={{
+                    <input type="text" value={eventTitle} style={{
                       width: "62%",
                       height: 33,
                       borderRadius: 5,
                       border: "solid 3pt #DEDEDE",
                       paddingLeft: 5,
                       fontSize: 16,
-                    }} /> 
+                    }}
+                      onChange={(e) => {setEventTitle(e.target.value)} } /> 
                   </div>
                   <p style={{
                     fontFamily: "Oxygen, sans-serif",
@@ -292,7 +335,7 @@ const AdminHome = () => {
                     width: "100%",
                     flex: 3,
                   }}>
-                    <textarea ref={eventDescriptionRef} style={{
+                    <textarea value={eventDescription} style={{
                       width: "80%",
                       height: "100%",
                       borderRadius: 5,
@@ -302,7 +345,10 @@ const AdminHome = () => {
                       resize: "none",
                       fontFamily: "Roboto",
                       fontSize: 14,
-                    }} />
+                    }} 
+                    onChange={(e) => {
+                      setEventDescription(e.target.value)
+                    }}/>
                   </div>
                 </div>
                 <button onClick={handleSubmit} className={"admin-submit-hover"} style={{
@@ -335,11 +381,7 @@ const AdminHome = () => {
                 </button>
               </div> 
           </NewModal>
-          {deleteOpen && (<DeletePrompt
-            open = {deleteOpen}
-            setOpen = {setDeleteOpen}
-            deleteFunction = {() => {removeEvent()}}
-          />)}
+          {deleteOpen && (<DeletePrompt open = {deleteOpen} setOpen = {setDeleteOpen} deleteFunction = {() => {removeEvent()}} />)}
           </form>
           <SmallContainer
             title="Edit Links"
@@ -349,7 +391,7 @@ const AdminHome = () => {
             <div
               style={{
                 paddingLeft: 20,
-                height: "60vh",
+                minHeight: "60vh",
                 width: "90%",
                 display: "flex",
                 flexDirection: "column",

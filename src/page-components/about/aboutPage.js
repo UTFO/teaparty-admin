@@ -17,7 +17,7 @@ function Tab(props) {
       className="about-tab"
       id={props.active ? "active" : "not-active"}
       onClick={() => {
-        props.setSectionActive(props.section["id"]);
+        props.setSectionActive(props.index);
       }}
     >
       <p>{props.section["name"]}</p>
@@ -31,7 +31,6 @@ function Page(props) {
   var imageMatch = /{(.*)}/;
 
   var htmlString = [];
-  console.log(string);
 
   for (let i = 0; i < string.length; i++) {
     if (string[i] == null) continue;
@@ -42,15 +41,13 @@ function Page(props) {
       htmlString[i] = (
         <img
           id="page-about-page-image"
-          src={require("../../data/" + props.section[imageMatches[1]])}
+          src={require(props.section[imageMatches[1]])}
         />
       );
     } else {
       htmlString[i] = <p>{string[i]}</p>;
     }
   }
-
-  console.log(htmlString);
 
   return (
     <>
@@ -66,8 +63,6 @@ function Page(props) {
 
 function About() {
   const [sectionActive, setSectionActive] = useState(0);
-
-  //var sectionInfo = require('../../data/texts/About.json');
   const [sectionInfo, setSectionInfo] = useState([]);
   const firstUpdate = useRef(true);
   useEffect(() => {
@@ -92,11 +87,12 @@ function About() {
           style={{ "--height": height + "vh", "--width": width + "vw" }}
         >
           <div className="page-about-tabs">
-            {sectionInfo.map((section) => {
+            {sectionInfo.map((section, index) => {
               return (
                 <Tab
                   section={section}
-                  active={section["id"] == sectionActive}
+                  index={index}
+                  active={index == sectionActive}
                   setSectionActive={setSectionActive}
                 />
               );
@@ -105,8 +101,8 @@ function About() {
           <div className="page-about-menu">
             <img src={Paper} />
             <div className="page-about-page">
-              {sectionInfo.map((section) => {
-                if (sectionActive == section["id"])
+              {sectionInfo.map((section, index) => {
+                if (sectionActive == index)
                   return <Page section={section} />;
               })}
             </div>

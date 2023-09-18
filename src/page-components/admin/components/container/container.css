@@ -4,8 +4,7 @@
   background-color: #f4f4f4;
   font-family: "Oxygen", sans-serif;
   flex-direction: column;
-  flex-grow: 1;
-  min-height: fit-content;
+  min-height: 100vh;
 }
 
 .admin-container-p {

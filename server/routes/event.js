@@ -8,7 +8,6 @@ const ObjectId = require("mongodb").ObjectId;
 // This section will help you get a list of all the records.
 router.get("/", function (req, res) {
   let db_connect = dbo.getDb();
-
   db_connect
     .collection("event")
     .find({})
@@ -20,8 +19,22 @@ router.get("/", function (req, res) {
 });
 
 //post a new record
-router.post("/", function (req, response) {
+router.post("/", async function (req, response) {
+  const header = req.headers["authorization"]
+  if (!header) {
+    response.sendStatus(403)
+    console.log("no auth")
+    return;
+  }
+  const token = header.split(" ")[1]
+  
   let db_connect = dbo.getDb();
+  const tokenResults = await db_connect.collection("passcode").find({token: token}).toArray()
+  if (tokenResults.length != 1) {
+    response.sendStatus(403)
+    console.log("invalid token")
+    return;
+  }
   let myobj = {
     title: req.body.title,
     address: req.body.address,
@@ -39,8 +52,22 @@ router.post("/", function (req, response) {
 });
 
 //update a new record
-router.put("/:id", function (req, response) {
+router.put("/:id", async function (req, response) {
+  const header = req.headers["authorization"]
+  if (!header) {
+    response.sendStatus(403)
+    console.log("no auth")
+    return;
+  }
+  const token = header.split(" ")[1]
+  
   let db_connect = dbo.getDb();
+  const tokenResults = await db_connect.collection("passcode").find({token: token}).toArray()
+  if (tokenResults.length != 1) {
+    response.sendStatus(403)
+    console.log("invalid token")
+    return;
+  }
   let myquery = { _id: new ObjectId(req.params.id) };
   let newvalues = {
     $set: {
@@ -64,12 +91,26 @@ router.put("/:id", function (req, response) {
 });
 
 //delete a record
-router.delete("/:id", (req, response) => {
+router.delete("/:id", async (req, response) => {
+  const header = req.headers["authorization"]
+  if (!header) {
+    response.sendStatus(403)
+    console.log("no auth")
+    return;
+  }
+  const token = header.split(" ")[1]
+  
   let db_connect = dbo.getDb();
+  const tokenResults = await db_connect.collection("passcode").find({token: token}).toArray()
+  if (tokenResults.length != 1) {
+    response.sendStatus(403)
+    console.log("invalid token")
+    return;
+  }
   let myquery = { _id: new ObjectId(req.params.id) };
   db_connect.collection("event").deleteOne(myquery, function (err, obj) {
     if (err) {
-      res.sendStatus(400);
+      response.sendStatus(400);
       console.log(err);
       return;
     }

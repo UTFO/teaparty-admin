@@ -10,11 +10,13 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let passcode = await checkPasscode(passwordInput.current.value)
+    console.log(passcode)
     if (passcode.access) {
       // setTimeout(() => {
       //   window.location.href = "/admin/home"
       // }, 500)
       sessionStorage.setItem("accessToken", "true")
+      sessionStorage.setItem("token", passcode.token)
       window.location.href = "/admin/dashboard";
     } else {
       setMessage("Incorrect Password, Try Again!");

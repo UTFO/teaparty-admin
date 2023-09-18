@@ -19,6 +19,8 @@ import AdminDoc from "./admin/admindoc/admindoc.js";
 
 import AdminNavbar from "./admin/components/navbar/nav.js";
 
+import MissingPage from './missing-page/missingpage.js'
+
 export {
   Home,
   About,
@@ -36,4 +38,5 @@ export {
   AdminDashboard,
   AdminDoc,
   AdminNavbar,
+  MissingPage
 };

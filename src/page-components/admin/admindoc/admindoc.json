@@ -4,25 +4,55 @@
       "heading": "Introduction",
       "subheadings": [
         {
-          "subheading": "Subheading 1",
-          "text": "~~TestA~~"
-        },
-        {
-          "subheading": "Subheading 2",
-          "text": "# TestB"
+          "subheading": "Welcome",
+          "text": [
+              "# Introduction to the Admin Page",
+              "The documentation serves to inform users what the website is built with.",
+              "It also provides instructions on **how to manipulate the website data** in various levels.",
+              "Throughout the documentation, you may find information on...",
+              "- The Tech Stack of the Website",
+              "- Accessing Code via GitHub Repo",
+              "- Accessing the Back-end Server",
+              "- Accessing the WebHost",
+              "\nYou can get started by clicking on the **Headings** on the left.",
+              "\nAs a side note, you can contact the **University of Toronto Freelancer's Organization** (Creators) for necessary technical support!",
+              "However, it would be best to have the club's developers to fix or modify code if needed."
+          ]
         }
       ]
     },
     {
-      "heading": "Page Content",
+      "heading": "Tech Stack",
       "subheadings": [
         {
-          "subheading": "Subheading 1",
-          "text": "## TestC"
+          "subheading": "React.js",
+          "text": [
+            "# What is React?",
+            "React.js is a JavaScript framework for **Front-End development**.",
+            "We extensively used it along with vanilla CSS to structure and style the club's website.",
+            "\nOne note to take of is that the website is built solely for monitor display aspects. **It is not built reactively for smaller displays.**"
+          ]
         },
         {
-          "subheading": "Subheading 2",
-          "text": "[] TestD"
+          "subheading": "Express.js",
+          "text": [
+            "# What is Express?",
+            "Express.js is a JavaScript framework for **Back-End development**.",
+            "We used it to create a RestAPI that facilitates data transfer between the cloud database and the website",
+            "Data Security was also considered upon creating the admin page and data retrievals.",
+            "\nThere are ultimately **security flaws**, though our security implementations is justifiably enough for the club websites.",
+            "If there are ever security concerns, do not hesitate to contact **University of Toronto Freelancer's Organization** or have your club developers modify the code!"
+        ]
+        },
+        {
+          "subheading": "MongoDB",
+          "text": [
+            "# What is MongoDB?",
+            "MongoDB is a **NoSQL Cloud Database** to store JSON data.",
+            "We used it to store textual information, which includes image links.",
+            "The images are stored in Amazon S3, a separate database for storing files.",
+            "To get direct access to these database, contact your **Credentials Manager**."
+        ]
         }
       ]
     },
@@ -30,12 +60,46 @@
       "heading": "Code Base",
       "subheadings": [
         {
-          "subheading": "Subheading 1",
-          "text": "TestE"
+          "subheading": "Club Website",
+          "text": [
+            "# Intro to Front-End Code Framework",
+            "The front-end is built in React.js with several JavaScript and CSS files.",
+            "There are two main folders:",
+            "1. src/api",
+            "2. src/page-component",
+            "3. src/data/texts",
+            "\n ### API Folder",
+            "The API Folder contains functions that communicate directly with the server. It follows the RestAPI Framework, using PUT, DELETE, UPDATE, and GET requests.",
+            "There should be no need to change this as it simply passes and retrieves necessary information to and from the server",
+            "### Page Components Folder",
+            "The Page Compoments Folder contains all the pages: Home, About, Team, Events, FAQ, and Admin",
+            "It also contains Navbar, Footer, and Page Introductions which are elements that are added to the pages.",
+            "The pages' CSS files are all within their respective folders.",
+            "### Data Text Folder",
+            "The Data Text Folder contains only Page Introduction texts in JSON format. This may be freely edited."
+        ]
         },
         {
-          "subheading": "Subheading 2",
-          "text": "TestF"
+          "subheading": "Server",
+          "text": [
+            "# Intro to Back-End Code Framework",
+            "The back-end is built in Express.js with MongoDB",
+            "There is one main folder and file, which is server/routes and server.js",
+            "\n### Server Routes Folder",
+            "The server routes folder contain REST API route functions for every MongoDB Collection. There are the following collections:",
+            "- About Texts (about)",
+            "- Upcoming Events (event)",
+            "- FAQs (faq)",
+            "- Highlight Events (home)",
+            "- Links (links)",
+            "- Team members (people)",
+            "\n### Server.js",
+            "This JavaScript file contains the routing of API URLs to functions based on the URL path.",
+            "For instance, using \"api.teaparty.ca/faq/${id}\" with a DELETE requests tells the code to redirect to the FAQ Delete function for the given ID",
+            "\n### Security",
+            "To prevent API usage, we secured the PUT, UPDATE, and DELETE requests with tokens.",
+            "These tokens are generated and obtained after logging into the admin page."
+        ]
         }
       ]
     },
@@ -43,12 +107,25 @@
       "heading": "Web Host",
       "subheadings": [
         {
-          "subheading": "Subheading 1",
-          "text": "TestG"
-        },
+          "subheading": "Vercel Web Provider",
+          "text": [
+            "# Intro to Vercel Web Provider",
+            "To host the front-end, we use [Vercel](https://vercel.com/dashboard). It simply deploys and runs the front-end code.",
+            "To access the web provider directly, please contact your Credentials Manager."
+        ]
+        }
+      ]
+    },
+    {
+      "heading": "Server Host",
+      "subheadings": [
         {
-          "subheading": "Subheading 2",
-          "text": "TestH"
+          "subheading": "Render Server Host",
+          "text": [
+            "# Intro to Render Server Host",
+            "To host the server, we use [Render](https://dashboard.render.com).",
+            "To access the server directly, please contact your Credentials Manager."
+        ]
         }
       ]
     }

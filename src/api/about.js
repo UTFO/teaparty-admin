@@ -10,6 +10,7 @@ export const newAbout = async (name, text) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
     },
     body: JSON.stringify({
       name: name,
@@ -25,6 +26,7 @@ export const updateAbout = async (id, name, text) => {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
     },
     body: JSON.stringify({
       name: name,
@@ -38,6 +40,9 @@ export const updateAbout = async (id, name, text) => {
 export const deleteAbout = async (id) => {
   const response = await fetch(`${API_ENDPOINT}/about/${id}`, {
     method: "DELETE",
+    headers: {
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
+    }
   });
   const data = await response.json();
   return data;

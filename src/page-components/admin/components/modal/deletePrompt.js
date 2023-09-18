@@ -23,7 +23,7 @@ const DeletePrompt = (props) => {
                         This will delete the object permanently. This action cannot be undone
                     </div>
                 </div>
-                <div className="buttons">
+                <div className="delete-buttons">
                     <button className="no-button" onClick={handleClose}>Cancel</button>
                     <button className="yes-button" onClick={executeDelete}>Proceed</button>
                 </div>

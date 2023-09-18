@@ -18,6 +18,7 @@ export const newTeam = async (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
     },
     body: JSON.stringify({
       name: name,
@@ -45,6 +46,7 @@ export const updateTeam = async (
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
     },
     body: JSON.stringify({
       name: name,
@@ -62,6 +64,9 @@ export const updateTeam = async (
 export const deleteTeam = async (id) => {
   const response = await fetch(`${API_ENDPOINT}/team/${id}`, {
     method: "DELETE",
+    headers: {
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
+    }
   });
   const data = await response.json();
   return data;

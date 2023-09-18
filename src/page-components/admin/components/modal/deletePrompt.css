@@ -5,8 +5,8 @@
     align-items: center;
     background-color: white;
     border-radius: 40px;
-    width: 45vw;
-    height: 15vw;
+    width: 600px;
+    height: 200px;
     text-align: center;
 }
 
@@ -31,36 +31,22 @@
     height: 20%;
 }
 
-.buttons{
+.delete-buttons{
     display: flex;
     flex-direction: row;
     width: 70%;
-    justify-content: space-between;
-    gap: 20px;
+    justify-content: center;
+    gap: 40px;
 }
 
-
-.no-button{
+.no-button, .yes-button{
     background-color: #85ffb6;
-    flex: 1;
-    align-self: flex-start;
     cursor: pointer;
     border: 2px solid black;
     border-radius: 10px;
     transition: background-color 0.2s ease;
     padding: 10px 20px;
-}
-
-
-
-.yes-button{
-    background-color: #85ffb6;
-    flex: 1;
-    align-self: flex-end;
-    cursor: pointer;
-    border: 2px solid black;
-    border-radius: 10px;
-    transition: background-color 0.2s ease;
-    padding: 10px 20px;
+    font-weight: bold;
+    font-size: 1em;
 }
 

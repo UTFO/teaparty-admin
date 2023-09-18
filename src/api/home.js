@@ -12,6 +12,7 @@ export const newHome = async (header, text, image) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
     },
     body: JSON.stringify({
       header: header,
@@ -28,6 +29,7 @@ export const updateHome = async (id, header, text, image) => {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
     },
     body: JSON.stringify({
       header: header,
@@ -42,6 +44,9 @@ export const updateHome = async (id, header, text, image) => {
 export const deleteHome = async (id) => {
   const response = await fetch(`${API_ENDPOINT}/home/${id}`, {
     method: "DELETE",
+    headers: {
+      "Authorization":  `Bearer ${sessionStorage.getItem("token")}`
+    }
   });
   const data = await response.json();
   return data;
