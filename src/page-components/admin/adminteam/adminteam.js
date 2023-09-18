@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
-import { getTeam, newTeam, updateTeam } from "../../../api/team";
+import { deleteTeam, getTeam, newTeam, updateTeam } from "../../../api/team";
 
 import HorizontalScrollContainer from "../components/scrollContainer/horizontalScrollContainer";
 import TeamListContainer from "../components/scrollContainer/teamListContainer";
 import NewModal from "../components/modal/addingModal";
+import DeletePrompt from "../components/modal/deletePrompt";
 import { uploadFile, deleteFile } from "../../../api/images";
 
 import { fileNameToSrc } from "../../../helper";
@@ -37,6 +38,27 @@ const AdminTeam = () => {
     }
     preloadTeam();
   }, []);
+
+  const handleInitialDelete = (index) => {
+      setEditIndex(index);
+      setDeleteOpen(true);
+  }
+
+  const handleTeamDelete = () => {
+    deleteTeam(Teams[editIndex].id);
+    setTeams((prev) =>{
+      const updatedTeams = [...prev];
+      updatedTeams.splice(editIndex, 1);
+      return updatedTeams;
+    });
+  }
+
+  const [newOpen, setNewOpen] = useState(false);
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const [editIndex, setEditIndex] = useState(null);
+
   const editTeam = (index) => {
     const data= Teams[index]
     setEditData({
@@ -65,12 +87,17 @@ const AdminTeam = () => {
                   image = {team.image}
                   name = {team.name}
                   text={team.message}
+                  deleteFunction={() => {handleInitialDelete(index)}}
                   editFunction={() => {editTeam(index)}}
-                  deleteFunction={() => {}}
                 />
               );
             })}
           </HorizontalScrollContainer>
+          {deleteOpen && (<DeletePrompt
+            open = {deleteOpen}
+            setOpen = {setDeleteOpen}
+            deleteFunction = {() => {handleTeamDelete()}}
+          />)}
           {open && <NewTeamModal open={open} setOpen={setOpen} editData={editData} setEditData={setEditData}/>}
         </SmallContainer>
       </Container>
@@ -398,20 +425,6 @@ const NewTeamModal = (props) => {
     </NewModal>
   )
 }
-var dummyTeam = [
-  {
-    image: "",
-    name: "Test",
-    text: "Test",
-  },{
-    image: "",
-    name: "Test",
-    text: "Test",
-  },{
-    image: "",
-    name: "Test",
-    text: "Test",
-  }
-]
+
 
 export default AdminTeam;

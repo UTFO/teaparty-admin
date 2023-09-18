@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
-import { getAbout, newAbout, updateAbout } from "../../../api/about";
+import { deleteAbout, getAbout, newAbout, updateAbout } from "../../../api/about";
 
 import HorizontalScrollContainer from "../components/scrollContainer/horizontalScrollContainer";
 import AboutListContainer from "../components/scrollContainer/aboutListContainer";
 import NewModal from "../components/modal/addingModal";
+import DeletePrompt from "../components/modal/deletePrompt";
 
 const AdminAbout = () => {
   const [Abouts, setAbouts] = useState([]);
@@ -29,6 +30,29 @@ const AdminAbout = () => {
     });
   };
 
+  // controlling the opening and closing of the modal for adding new about tabs
+  const [openModal, setOpenModal] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const [editIndex, setEditIndex] = useState(null);
+
+  const [tabText, setTabText] = useState();
+  const [descText, setDescText] = useState();
+
+  const initialDeleteHandler = (index) => {
+    setDeleteOpen(true);
+    setEditIndex(index);
+  }
+
+  const handleAboutDelete = () => {
+      deleteAbout(Abouts[editIndex]._id);
+      setAbouts((prevAbouts) => {
+        const updatedAbouts = [...prevAbouts];
+        updatedAbouts.splice(editIndex, 1);
+        return updatedAbouts;
+      });
+    }
   const editAbout = (index) => {
     setModalData({
       edit: true,
@@ -43,8 +67,16 @@ const AdminAbout = () => {
     preloadAbout();
   }, []);
 
-  // controlling the opening and closing of the modal for adding new about tabs
-  const [openModal, setOpenModal] = useState(false);
+  useEffect( () => {
+    if (editIndex || editIndex === 0) {
+      setAbouts((prevAbouts) => {
+      const newAbouts = [...prevAbouts];
+      newAbouts[editIndex].name = tabText;
+      newAbouts[editIndex].text = descText;
+      return newAbouts;
+    });
+    }
+  }, [])
   return (
     <div>
       <AdminNavbar />
@@ -69,12 +101,18 @@ const AdminAbout = () => {
                 <AboutListContainer
                   name={about.name}
                   text={about.text}
+                  deleteFunction={() => {initialDeleteHandler(index)}}
                   editFunction={() => editAbout(index)}
-                  deleteFunction={() => {}}
                 />
               );
             })}
           </HorizontalScrollContainer>
+
+          {deleteOpen && (<DeletePrompt
+            open = {deleteOpen}
+            setOpen = {setDeleteOpen}
+            deleteFunction = {() => {handleAboutDelete()}}
+          />)}
           {openModal && <AboutTabModal open={openModal} setOpen={setOpenModal} data={ModalData}/>}
         </SmallContainer>
       </Container>

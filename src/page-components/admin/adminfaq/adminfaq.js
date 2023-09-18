@@ -3,13 +3,14 @@ import AdminNavbar from "../components/navbar/nav";
 import Container from "../components/container/container";
 import SmallContainer from "../components/smallContainer/smallContainer";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { getFaq, newFaq, updateFaq } from "../../../api/faq";
+import { deleteFaq, getFaq, newFaq, updateFaq } from "../../../api/faq";
 
 import {
   ScrollContainer,
   ListContainer,
 } from "../components/scrollContainer/scrollContainer.js";
 import NewModal from "../components/modal/addingModal";
+import DeletePrompt from "../components/modal/deletePrompt";
 
 const AdminFaq = () => {
   const [FAQs, setFAQs] = useState([]);
@@ -30,12 +31,46 @@ const AdminFaq = () => {
     });
   };
 
+  const initialDeleteHandler = (index) => {
+    setEditIndex(index);
+    setDeleteOpen(true);
+  }
+
+  const handleFaqDelete = () => {
+    deleteFaq(FAQs[editIndex].id);
+    setFAQs((prev) => {
+      const updatedFAQs = [...prev];
+      updatedFAQs.splice(editIndex, 1);
+      return updatedFAQs;
+    })
+  }
+
   useEffect(() => {
     if (sessionStorage.getItem("accessToken") !== "true") {
       window.location.href = "/admin";
     }
     preloadFAQ();
   }, []);
+
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const [editIndex, setEditIndex] = useState(null);
+
+  const [questionText, setQuestionText] = useState();
+  const [answerText, setAnswerText] = useState();
+
+  useEffect( () => {
+    if (editIndex || editIndex === 0) {
+      setFAQs((prevFAQs) => {
+      const newFaqs = [...prevFAQs];
+      newFaqs[editIndex].question = questionText;
+      newFaqs[editIndex].answer = answerText;
+      return newFaqs;
+    })
+    }
+  }, []);
+
   const [editData, setEditData] = useState({edit: false})
   const editFaq = (index) => {
     const data = FAQs[index]
@@ -60,12 +95,19 @@ const AdminFaq = () => {
                 <ListContainer
                   title={faq.question}
                   answer={faq.answer}
+                  deleteFunction={() => {initialDeleteHandler(index)}}
                   editFunction={() => {editFaq(index)}}
-                  deleteFunction={() => {}}
                 />
               );
             })}
           </ScrollContainer>
+
+          {deleteOpen && (<DeletePrompt
+            open = {deleteOpen}
+            setOpen = {setDeleteOpen}
+            deleteFunction = {() => {handleFaqDelete()}}
+          />)}
+        
           {open && <FAQModal open={open} setOpen={setOpen} editData={editData}/>}
         </SmallContainer>
       </Container>

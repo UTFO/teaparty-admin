@@ -16,6 +16,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { getLinks, updateLinks } from "../../../api/links";
 import { getHome, newHome, deleteHome, updateHome } from "../../../api/home";
 import NewModal from "../components/modal/addingModal";
+import DeletePrompt from "../components/modal/deletePrompt";
 
 import { fileNameToSrc } from "../../../helper";
 
@@ -59,6 +60,8 @@ const AdminHome = () => {
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null)
   //determines if the modal is open or not
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
   const [open, setOpen] = useState(false)
 
   const [edit, setEdit] = useState({
@@ -137,6 +140,11 @@ const AdminHome = () => {
     console.log("closed")
   }
 
+  const handleInitialDelete = (index) => {
+    setEditIndex(index);
+    setDeleteOpen(true);
+  }
+
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
     if (edit.edit && edit.image === imageUrl) {
@@ -168,7 +176,7 @@ const AdminHome = () => {
       newHome(eventTitle, eventDescription, fileName)
     }    
     handleClose()
-    })
+  })
 
   const editEvent = (index) => {
     const data = events[index]
@@ -189,8 +197,8 @@ const AdminHome = () => {
     console.log(index)
     setEvents((prev) => {
       const updatedEvents = [...prev];
-      updatedEvents.splice(index, 1);
-      return updatedEvents
+      updatedEvents.splice(editIndex, 1);
+      return updatedEvents;
     })
   }
 
@@ -222,8 +230,8 @@ const AdminHome = () => {
                   <ListContainer
                     image={event.image}
                     title={event.header}
+                    deleteFunction={() => {handleInitialDelete(index)}}
                     editFunction={() => {editEvent(index)}}
-                    deleteFunction={() => {removeEvent(index)}}
                   />
                 );
               })}
@@ -372,6 +380,7 @@ const AdminHome = () => {
                 </button>
               </div> 
           </NewModal>}
+          {deleteOpen && (<DeletePrompt open = {deleteOpen} setOpen = {setDeleteOpen} deleteFunction = {() => {removeEvent(editIndex)}} />)}
           </form>
           <SmallContainer
             title="Edit Links"
@@ -418,6 +427,6 @@ const AdminHome = () => {
       </Container>
     </div>
   );
-};
+}
 
 export default AdminHome;
