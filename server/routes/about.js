@@ -104,6 +104,7 @@ router.delete("/:id", async (req, response) => {
     response.sendStatus(403)
     console.log("invalid token")
     return;
+  }
     
   let myquery = { _id: new ObjectId(req.params.id) };
   db_connect.collection("about").deleteOne(myquery, function (err, obj) {
