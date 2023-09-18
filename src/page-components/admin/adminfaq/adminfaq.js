@@ -31,11 +31,6 @@ const AdminFaq = () => {
     });
   };
 
-  const handleFaqUpdate = (index) => {
-    setEditIndex(index);
-    setEditOpen(true);
-  };
-
   const initialDeleteHandler = (index) => {
     setEditIndex(index);
     setDeleteOpen(true);
@@ -57,8 +52,6 @@ const AdminFaq = () => {
     preloadFAQ();
   }, []);
 
-
-  const [newOpen, setNewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -95,7 +88,7 @@ const AdminFaq = () => {
           subtitle="Click on the pencil icon to edit, plus icon to add, and trash icon to delete"
           width={95}
         >
-          <ScrollContainer handleOpen={() => {setNewOpen(true)}}> 
+          <ScrollContainer handleOpen={() => {setOpen(true)}}> 
             {/* Insert list of event highlights here as a ListContainer */}
             {FAQs.map((faq, index) => {
               return (
@@ -108,7 +101,6 @@ const AdminFaq = () => {
               );
             })}
           </ScrollContainer>
-          <NewFaqModal open = {newOpen} setOpen = {setNewOpen}></NewFaqModal>
 
           {deleteOpen && (<DeletePrompt
             open = {deleteOpen}

@@ -60,7 +60,6 @@ const AdminHome = () => {
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null)
   //determines if the modal is open or not
-  const [newOpen, setNewOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [open, setOpen] = useState(false)
@@ -137,7 +136,7 @@ const AdminHome = () => {
 
   const handleClose = () => {
     setFile(null)
-    setNewOpen(false)
+    setOpen(false)
     console.log("closed")
   }
 
@@ -177,7 +176,7 @@ const AdminHome = () => {
       newHome(eventTitle, eventDescription, fileName)
     }    
     handleClose()
-    })
+  })
 
   const editEvent = (index) => {
     const data = events[index]
@@ -224,7 +223,7 @@ const AdminHome = () => {
             subtitle="Click on the pencil icon to edit, plus icon to add, and trash icon to delete"
             width={50}
           >
-            <ScrollContainer handleOpen={() => {setNewOpen(true)}}>
+            <ScrollContainer handleOpen={() => {setOpen(true)}}>
               {/* Insert list of event highlights here as a ListContainer */}
               {events.map((event, index) => {
                 return (
@@ -380,8 +379,8 @@ const AdminHome = () => {
                   }}/>
                 </button>
               </div> 
-          </NewModal>
-          {deleteOpen && (<DeletePrompt open = {deleteOpen} setOpen = {setDeleteOpen} deleteFunction = {() => {removeEvent()}} />)}
+          </NewModal>}
+          {deleteOpen && (<DeletePrompt open = {deleteOpen} setOpen = {setDeleteOpen} deleteFunction = {() => {removeEvent(editIndex)}} />)}
           </form>
           <SmallContainer
             title="Edit Links"
@@ -428,6 +427,6 @@ const AdminHome = () => {
       </Container>
     </div>
   );
-};
+}
 
 export default AdminHome;

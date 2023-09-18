@@ -64,15 +64,12 @@ router.put("/:id", async function (req, response) {
   const token = header.split(" ")[1]
   
   let db_connect = dbo.getDb();
-<<<<<<< HEAD
-=======
   const tokenResults = await db_connect.collection("passcode").find({token: token}).toArray()
   if (tokenResults.length != 1) {
     response.sendStatus(403)
     console.log("invalid token")
     return;
   }
->>>>>>> b60fe5264fbcdcc03e2035f93f36c00a0ecfe790
   let myquery = { _id: new ObjectId(req.params.id) };
   let newvalues = {
     $set: {
@@ -108,15 +105,12 @@ router.delete("/:id", async (req, response) => {
   const token = header.split(" ")[1]
   
   let db_connect = dbo.getDb();
-<<<<<<< HEAD
-=======
   const tokenResults = await db_connect.collection("passcode").find({token: token}).toArray()
   if (tokenResults.length != 1) {
     response.sendStatus(403)
     console.log("invalid token")
     return;
   }
->>>>>>> b60fe5264fbcdcc03e2035f93f36c00a0ecfe790
   let myquery = { _id: new ObjectId(req.params.id) };
   db_connect.collection("people").deleteOne(myquery, function (err, obj) {
     if (err) {

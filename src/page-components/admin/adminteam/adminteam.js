@@ -79,7 +79,7 @@ const AdminTeam = () => {
           subtitle="Click on the pencil icon to edit, plus icon to add, and trash icon to delete"
           width={95}
         >
-          <HorizontalScrollContainer handleOpen={() => {setNewOpen(true)}}>
+          <HorizontalScrollContainer handleOpen={() => {setOpen(true)}}>
             {/* Insert list of event highlights here as a ListContainer */}
             {Teams.map((team, index) => {
               return (

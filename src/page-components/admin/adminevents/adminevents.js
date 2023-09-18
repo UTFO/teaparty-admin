@@ -47,7 +47,6 @@ const AdminEvents = () => {
     preloadEvents();
   }, []);
 
-  const [newOpen, setNewOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const [editIndex, setEditIndex] = useState(null);
@@ -68,7 +67,7 @@ const AdminEvents = () => {
   const [open, setOpen] = useState(false)
   const [editData, setEditData] = useState({edit: false})
   const handleClose = () => {
-    setNewOpen(false);
+    setOpen(false);
   }
   const [eventTitle, setEventTitle] = useState("")
   const [eventType, setEventType] = useState("")
@@ -116,9 +115,9 @@ const AdminEvents = () => {
           <SmallContainer
             title="Manage Upcoming Events"
             subtitle="Click on the pencil icon to edit, plus icon to add, and trash icon to delete"
-            width={45}
+            width={100}
           >
-            <ScrollContainer handleOpen={() => {setNewOpen(true)}}>
+            <ScrollContainer handleOpen={() => {setOpen(true)}}>
               {/* Insert list of event highlights here as a ListContainer */}
               {events.map((event, index) => {
                 return (
@@ -133,7 +132,7 @@ const AdminEvents = () => {
                 );
               })}
             </ScrollContainer>
-            <NewModal open={newOpen} setOpen={setNewOpen} >
+            <NewModal open={open} setOpen={setOpen} >
               <div
                 style={{
                   position: "absolute",
@@ -319,25 +318,7 @@ const AdminEvents = () => {
             deleteFunction = {() => {handleEventDelete()}}
           />)}
           </SmallContainer>
-          <SmallContainer
-            title="Check Past Events"
-            subtitle="For reference. Remove if necessary"
-            width={40}
-          >
-            <ScrollContainer>
-              {/* Insert list of event highlights here as a ListContainer */}
-              {/* {FAQs.map((faq) => {
-                return (
-                  <ListContainer
-                    title={faq.question}
-                    answer={faq.answer}
-                    editFunction={() => {}}
-                    deleteFunction={() => {}}
-                  />
-                );
-              })} */}
-            </ScrollContainer>
-          </SmallContainer>
+
         </div>
       </Container>
     </div>
