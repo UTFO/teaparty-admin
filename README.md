@@ -1,76 +1,102 @@
-<<<<<<< HEAD
+# UofTea Party Website 🍵
 
-# Getting Started with Create React App
+Welcome to the UofTea Party's official website! ☕
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![UofTea Party](https://cdn.discordapp.com/attachments/495242479239430145/1153534318145192008/Untitled_drawing_1.jpg)
 
-## Available Scripts
+## Table of Contents
+- [Introduction](#introduction)
+- [Features](#features)
+- [Technologies](#technologies)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Contributing](#contributing)
 
-In the project directory, you can run:
+## Introduction
 
-### `npm start`
+This full-stack project was crafted with love for the tea aficionados at our university. The UofTea Party Website serves as a hub for all things tea-related, providing information about upcoming events, a glimpse into the team behind the scenes, answers to frequently asked questions, and much more!
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+![Home Page](https://cdn.discordapp.com/attachments/898385295186202704/1153533248291487785/image.png)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
 
-### `npm test`
+### Frontend
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Home Page:** A welcoming landing page that invites visitors to explore the world of tea.
+- **About Page:** Learn about the history and mission of the Tea Enthusiast Society.
+- **Upcoming Events:** Stay updated on exciting tea-related events and gatherings.
+- **FAQs:** Get answers to common questions about tea and our society.
+- **Team Page:** Meet the dedicated individuals who make our society thrive.
 
-### `npm run build`
+### Backend
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Express.js:** A robust backend powered by Express.js to handle server-side operations.
+- **MongoDB:** A scalable and efficient database system for storing tea society data.
+- **Admin Site:** An intuitive admin panel that allows tea society administrators to dynamically update website content.
+- **Amazon S3 Integration:** Seamlessly store and manage website images on Amazon S3 for high availability and reliability.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Technologies
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Frontend:
+  - React.js
+  - CSS
 
-### `npm run eject`
+- Backend:
+  - Express.js
+  - MongoDB
+  - Amazon S3
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Getting Started
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+To get a local copy of this project up and running, follow these simple steps:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/utfo/teaparty-admin.git
+   ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+2. Navigate to the project directory:
+   ```sh
+   cd teaparty-admin
+   ```
 
-## Learn More
+3. Install dependencies for both the frontend and backend:
+   ```sh
+   cd website
+   npm install
+   cd ../server
+   npm install
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. Configure environment variables:
+   - Create a `.env` file in the `server` directory and set your MongoDB connection string and Amazon S3 credentials.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+5. Start the frontend and backend servers:
+   ```sh
+   # In the website directory
+   npm start
 
-### Code Splitting
+   # In the server directory
+   npm start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+6. Open your web browser and visit [http://localhost:3000](http://localhost:3000) to view the Tea Enthusiast Society Website.
 
-### Analyzing the Bundle Size
+## Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Explore the website, learn about tea, check out upcoming events, and meet the team! Admins can easily update content using the admin panel to keep the site fresh and engaging.
 
-### Making a Progressive Web App
+![Admin Panel](https://cdn.discordapp.com/attachments/495242479239430145/1153534612635664414/image.png)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Contributing
 
-### Advanced Configuration
+We welcome contributions from the tea-loving community. Whether it's fixing a bug, enhancing existing features, or suggesting new ideas, your input is valuable. Please message us on [Instagram](https://www.instagram.com/uoftea.party/) for any inquiries!
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
+Enjoy your tea journey with the UofTea Party Website! ☕🌿
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+Made with ❤️ by University of Toronto Freelancer's Organization
 
-# This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-# teaparty-website
-
-> > > > > > > d50af637e2009d13ba8587144abca7ee5b49356d
+Follow us on [Instagram](https://www.instagram.com/uoftea.party/) for updates!
