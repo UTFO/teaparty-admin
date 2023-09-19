@@ -17,6 +17,8 @@
 }
 
 .admin-about-title{
+    width: 85%;
+    text-wrap: wrap;
     align-self: flex-start;
     font-family: 'Oxygen', sans-serif;
     font-size: 1.5em;
@@ -24,7 +26,7 @@
 
 
 .buttons{
-    align-self: flex-end;
+    width: 15%; 
     display: flex;
     flex-direction: row;
     gap: 20px;
