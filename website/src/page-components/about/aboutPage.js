@@ -64,12 +64,7 @@ function Page(props) {
 function About() {
   const [sectionActive, setSectionActive] = useState(0);
   const [sectionInfo, setSectionInfo] = useState([]);
-  const firstUpdate = useRef(true);
   useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
     getAbout().then((data) => {
       setSectionInfo(data);
     });

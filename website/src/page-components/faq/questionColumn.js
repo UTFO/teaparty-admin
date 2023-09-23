@@ -6,12 +6,7 @@ import { useState, useEffect, useRef } from "react";
 function Column() {
   //var questionList = require('../../data/texts/FAQ.json');
   const [questionList, setQuestionList] = useState([]);
-  const firstUpdate = useRef(true);
   useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
     getFaq().then((data) => {
       setQuestionList(data);
     });

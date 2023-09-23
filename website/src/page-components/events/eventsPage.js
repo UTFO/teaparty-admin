@@ -82,12 +82,7 @@ const NoEvents = () => {
 //The main event section
 function Events() {
   const [events, setEvents] = useState([]);
-  const firstUpdate = useRef(true);
   useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
     getEvent().then((data) => {
       setEvents(data);
     });
