@@ -1,18 +1,18 @@
 {
   "About": {
-    "title": "Hear About Us!",
-    "text": "N/A"
+      "title": "Hear About Us!",
+      "text": "Learn about our history, our values, our vision and the objectives of our club."
   },
   "Team": {
-    "title": "Check Our Team!",
-    "text": "N/A"
+      "title": "Check Our Team!",
+      "text": "Learn detailed information about our team members, who they are, and how to contact them."
   },
   "FAQ": {
-    "title": "Welcome to our FAQ Page!",
-    "text": "N/A"
+      "title": "Welcome to our FAQ Page!",
+      "text": "You will find the answers to the most common questions here, check this page before asking your question!"
   },
   "Events": {
-    "title": "Check Our Events!",
-    "text": "N/A"
+      "title": "Check Our Events!",
+      "text": "Learn in detail about the location and the dates and times of our events, as well as a detailed description."
   }
 }
