@@ -9,18 +9,34 @@ router.post("/", function (req, res) {
     const uid = uidgen.generateSync()
     let myobj = {
         token: uid
-      };
-    
-    db_connect.collection("passcode").insertOne(myobj, function (err, res) {
-        if (err) { 
+    };
+
+    db_connect
+    .collection("code")
+    .find({})
+    .toArray()
+    .then((response) => {
+        if(response[0].passcode == null) {
             res.sendStatus(400);
-            console.log(err);
             return;
         }
-    })
-    console.log("token: " + uid)
-    // TODO: generate UUID token
-    res.json({"access": req.body.passcode == "passcode", "token": uid});
+
+        if(req.body.passcode != response[0].passcode) {
+            res.json({"access": false});
+            return;
+        }
+
+        db_connect.collection("passcode").insertOne(myobj, function (err, res) {
+            if (err) { 
+                res.sendStatus(400);
+                console.log(err);
+                return;
+            }
+        })
+
+        res.json({"access": true, "token": uid});
+    });
+    
 });
 
 module.exports = router;
