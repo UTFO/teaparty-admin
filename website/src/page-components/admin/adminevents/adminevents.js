@@ -68,6 +68,7 @@ const AdminEvents = () => {
   const [editData, setEditData] = useState({edit: false})
   const handleClose = () => {
     setOpen(false);
+    setTimeout(() => {preloadEvents()}, 500)
   }
   const [eventTitle, setEventTitle] = useState("")
   const [eventType, setEventType] = useState("")
@@ -132,7 +133,7 @@ const AdminEvents = () => {
                 );
               })}
             </ScrollContainer>
-            <NewModal open={open} setOpen={setOpen} >
+            <NewModal open={open} setOpen={setOpen}>
               <div
                 style={{
                   position: "absolute",

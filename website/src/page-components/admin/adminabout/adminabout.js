@@ -113,7 +113,7 @@ const AdminAbout = () => {
             setOpen = {setDeleteOpen}
             deleteFunction = {() => {handleAboutDelete()}}
           />)}
-          {openModal && <AboutTabModal open={openModal} setOpen={setOpenModal} data={ModalData}/>}
+          {openModal && <AboutTabModal open={openModal} setOpen={setOpenModal} data={ModalData} preloadAbout={() => {preloadAbout()}}/>}
         </SmallContainer>
       </Container>
     </div>
@@ -124,6 +124,7 @@ const AdminAbout = () => {
 const AboutTabModal = (props) => {
   const handleClose = () => {
     props.setOpen(false);
+    setTimeout(() => props.preloadAbout(), 500)
   }
   const [newData, setNewData] = useState({
     name: "",
@@ -140,12 +141,10 @@ const AboutTabModal = (props) => {
       })
 
     }
-    console.log(data)
   }, [])
   
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault()
-    console.log("submitted")
     if (data.edit)
       updateAbout(data.data._id, newData.name, newData.text)
     else

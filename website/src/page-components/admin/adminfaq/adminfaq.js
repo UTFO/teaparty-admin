@@ -94,7 +94,7 @@ const AdminFaq = () => {
             deleteFunction = {() => {handleFaqDelete()}}
           />)}
         
-          {open && <FAQModal open={open} setOpen={setOpen} editData={editData}/>}
+          {open && <FAQModal open={open} setOpen={setOpen} editData={editData} preloadFAQ={preloadFAQ}/>}
         </SmallContainer>
       </Container>
     </div>
@@ -107,7 +107,6 @@ const FAQModal = (props) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
     if (props.editData.edit) {
-      console.log(props.editData.data)
       questionRef.current.value = props.editData.data.question.toString()
       answerRef.current.value = props.editData.data.answer.toString()
     }}, 0)
@@ -115,6 +114,7 @@ const FAQModal = (props) => {
   },[])
   const handleClose = () => {
     props.setOpen(false);
+    setTimeout(() => {props.preloadFAQ()}, 500)
   }
 
   const handleSubmit = useCallback(async (e) => {

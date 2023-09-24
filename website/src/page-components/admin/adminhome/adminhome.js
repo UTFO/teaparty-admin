@@ -69,15 +69,12 @@ const AdminHome = () => {
   })
   // Function to save input values
   const submitForm = async () => {
-    console.log(form);
     updateLinks(
       form["id"],
       form["formLink"],
       form["email"],
       form["instaLink"]
-    ).then((res) => {
-      console.log(res);
-    });
+    )
   };
 
   // Function to handle file and store it to file state
@@ -96,7 +93,6 @@ const AdminHome = () => {
   // Function to preload form values
   const preloadForm = () => {
     getLinks().then((data) => {
-      console.log(data[0]);
       setForm({
         formLink: data[0]["signup"],
         instaLink: data[0]["instagram"],
@@ -117,7 +113,6 @@ const AdminHome = () => {
           { header: info.header, text: info.text, image: info.image, id: info._id},
         ];
       });
-      console.log(tempEvents);
       setEvents(tempEvents);
     });
   };
@@ -137,7 +132,7 @@ const AdminHome = () => {
   const handleClose = () => {
     setFile(null)
     setOpen(false)
-    console.log("closed")
+    preloadEvents();
   }
 
   const handleInitialDelete = (index) => {
@@ -162,8 +157,6 @@ const AdminHome = () => {
       return
     }
     const fileName = await uploadFile(file)
-    console.log(fileName)
-    console.log("submitted")
     
     if (edit.edit) { // case 2: new image uploaded
       updateHome(edit.id, eventTitle, eventDescription, fileName)
@@ -194,7 +187,6 @@ const AdminHome = () => {
   const removeEvent = (index) => {
     deleteFile(events[index].image)
     deleteHome(events[index].id)
-    console.log(index)
     setEvents((prev) => {
       const updatedEvents = [...prev];
       updatedEvents.splice(editIndex, 1);
@@ -202,9 +194,6 @@ const AdminHome = () => {
     })
   }
 
-  useEffect(() => {
-    console.log(events)
-  }, [events])
   return (
     <div>
       <AdminNavbar />

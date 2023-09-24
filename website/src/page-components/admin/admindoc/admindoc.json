@@ -111,6 +111,8 @@
           "text": [
             "# Intro to Vercel Web Provider",
             "To host the front-end, we use [Vercel](https://vercel.com/dashboard). It simply deploys and runs the front-end code.",
+            "Everytime the repository branch attached to the Vercel deployment gets a new commit, Vercel auto re-deploys. You may also manually redeploy on the Vercel dashboard.",
+            "Custom domains must be paid for yearly, though they are fairly cheap.\n",
             "To access the web provider directly, please contact your Credentials Manager."
         ]
         }
@@ -124,6 +126,8 @@
           "text": [
             "# Intro to Render Server Host",
             "To host the server, we use [Render](https://dashboard.render.com).",
+            "The free plan works but shuts off when there are no API requests made in 15 minutes. When it receives its first API request, it cold starts and takes a while to get a response.",
+            "The plan where the API is constantly active is $7/month\n",
             "To access the server directly, please contact your Credentials Manager."
         ]
         }

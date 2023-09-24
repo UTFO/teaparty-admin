@@ -98,7 +98,7 @@ const AdminTeam = () => {
             setOpen = {setDeleteOpen}
             deleteFunction = {() => {handleTeamDelete()}}
           />)}
-          {open && <NewTeamModal open={open} setOpen={setOpen} editData={editData} setEditData={setEditData}/>}
+          {open && <NewTeamModal open={open} setOpen={setOpen} editData={editData} setEditData={setEditData} preloadTeam={preloadTeam}/>}
         </SmallContainer>
       </Container>
     </div>
@@ -147,7 +147,7 @@ const NewTeamModal = (props) => {
     setFile(null)
     setImageUrl(null)
     props.setOpen(false)
-    console.log("closed")
+    setTimeout(() => {props.preloadTeam()}, 500)
   }
 
   const handleSubmit = useCallback(async (e) => {
