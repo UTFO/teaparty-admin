@@ -7,6 +7,8 @@ import { checkPasscode } from "../../api/passcode";
 const AdminLogin = () => {
   const passwordInput = useRef(null);
   const [message, setMessage] = useState("");
+  const [eyeClicked, setEyeClicked] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     let passcode = await checkPasscode(passwordInput.current.value)
@@ -27,6 +29,10 @@ const AdminLogin = () => {
     e.target.className = "passwordEntry";
   };
 
+  const handleEyeClick = () => {
+    setEyeClicked(!eyeClicked);
+  }
+
   const returnHome = "> Back to Main Site";
 
   return (
@@ -44,12 +50,13 @@ const AdminLogin = () => {
           <div className="passwordEntryContainer">
             <img src={passwordLogo} className="passwordLogo" />
             <input
-              type="password"
+              type={"text" ? eyeClicked : "password"}
               className="passwordEntry"
               placeholder="Enter Password"
               ref={passwordInput}
               onFocus={handleFocus}
             />
+            <i className = {"fa-solid fa-eye-slash" ? eyeClicked : "fa-solid fa-eye"} id="eye-icon" onClick={(e) => handleEyeClick()}></i>
           </div>
           <input className="loginButton" type="submit" value="Login" />
           <div className="errorText">{message}</div>
@@ -63,5 +70,10 @@ const AdminLogin = () => {
     </div>
   );
 };
+
+
+const PasswordEntry = () => {
+  
+}
 
 export default AdminLogin;
