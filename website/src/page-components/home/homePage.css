@@ -34,13 +34,13 @@
 }
 
 .colorFill {
-  background-color: #c4df9b;
+  background-color: rgba(2, 255, 12, 0.12);
 }
 
 .event-header {
   text-align: center;
   font-family: "page-intro-title-font";
-  color: #0cedc0;
+  color: #449258;
   margin-top: 5vh;
   margin-bottom: 0;
 }

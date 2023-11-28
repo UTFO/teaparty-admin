@@ -43,6 +43,7 @@
 .navbar-menu a {
   margin: auto 1.5vw;
   font-size: var(--navbar-menu-font-size);
+  text-decoration: underline solid transparent;
   text-decoration: none;
   color: black;
 }
@@ -85,8 +86,18 @@
 
 .navbarText:hover {
   color: rgb(17, 230, 113);
+  
+  border-color: rgb(10, 185, 89);
 }
 
 .navbarText {
+  
+  border-bottom: 2px solid transparent;
   transition: color 0.3s ease-out;
+  padding-bottom: 5px;
+  transition: border-color 0.3s ease-out;
+}
+
+.navbarText p {
+  margin: 0px;
 }

@@ -13,7 +13,7 @@
   margin-right: 0;
   margin-bottom: 2vh;
   transform: rotate(10deg);
-  border-color: #0cedc0;
+  border-color: #285734;
   border-style: solid;
   border-width: 4px;
 }
@@ -35,7 +35,7 @@
 }
 
 .image-text-area h1 {
-  color: #0cedc0;
+  color: #285734;
   font-family: navbar-menu-font;
   text-align: center;
 }

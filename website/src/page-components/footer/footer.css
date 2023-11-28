@@ -1,3 +1,7 @@
+:root {
+  --footerColor: rgba(0, 61, 6, 0.5)
+}
+
 .footer-section {
   grid-column: 1/21;
   grid-row: 5/6;
@@ -9,13 +13,13 @@
   height: 100%;
   width: 100%;
   position: relative;
-  fill: green;
+  fill: var(--footerColor);
 }
 
 .footer-section-info {
   position: relative;
   display: flex;
-  background-color: green;
+  background-color: var(--footerColor);
   padding: 3vh 0;
   justify-content: center;
   flex-direction: row;
@@ -28,7 +32,7 @@
 .footer-section-info section {
   margin: auto 0;
   margin-left: 5vw;
-  color: rgb(200, 200, 200);
+  color: #bed1bf;
 }
 
 .footer-section-info section p {

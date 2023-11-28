@@ -66,7 +66,7 @@ function Home() {
         <svg viewBox="0 0 450 35">
           <path
             d="M-100,-37 C2,55 450,55 550,-37 L550,55 L-100,55"
-            fill="#c4df9b"
+            fill="rgba(2, 255, 12, 0.12)"
           />
         </svg>
         <div className="colorFill">
@@ -93,7 +93,7 @@ function Home() {
         <svg viewBox="0 0 450 25">
           <path
             d="M-100,70 C2,-22 450,-22 550,70 L 550,-22 L -100, -22"
-            fill="#c4df9b"
+            fill="rgba(2, 255, 12, 0.12)"
           />
         </svg>
       </div>
